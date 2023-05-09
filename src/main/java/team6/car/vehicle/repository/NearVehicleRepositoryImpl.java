@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
-import team6.car.vehicle.domain.Near_Vehicle;
+import team6.car.vehicle.domain.NearVehicle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -27,26 +27,26 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public Near_Vehicle save(Near_Vehicle near_vehicle){
+    public NearVehicle save(NearVehicle near_vehicle){
         em.persist(near_vehicle);
         return near_vehicle;
     }
 
     @Override
-    public <S extends Near_Vehicle, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends NearVehicle, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
     @Override
-    public Optional<Near_Vehicle> findById(Long id) {
-        return Optional.ofNullable(em.find(Near_Vehicle.class, id));
+    public Optional<NearVehicle> findById(Long id) {
+        return Optional.ofNullable(em.find(NearVehicle.class, id));
     }
 
     @Override
-    public Optional<Near_Vehicle> findByDeviceId(Long id) {
-        TypedQuery<Near_Vehicle> query = em.createQuery(
-                "SELECT nv FROM Near_Vehicle nv WHERE nv.deviceId = :deviceId",
-                Near_Vehicle.class);
-        query.setParameter("deviceId", id);
+    public Optional<NearVehicle> findByNearDeviceId(Long id) {
+        TypedQuery<NearVehicle> query = em.createQuery(
+                "SELECT nv FROM Near_Vehicle nv WHERE nv.near_device_id = :near_device_id",
+                NearVehicle.class);
+        query.setParameter("near_device_id", id);
         try {
             return Optional.of(query.getSingleResult());
         } catch (NoResultException e) {
@@ -55,43 +55,51 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public List<Near_Vehicle> findAll() {
-        return em.createQuery("SELECT nv FROM Near_Vehicle nv", Near_Vehicle.class)
+    public List<NearVehicle> findByNearDeviceDeviceIdAndNoDepartureIsFalse(Long device_id) {
+        String query = "SELECT nv FROM Near_Vehicle nv JOIN nv.near_device nd WHERE nd.near_device_id = :device_id AND nv.No_departure = false";
+        TypedQuery<NearVehicle> typedQuery = em.createQuery(query, NearVehicle.class);
+        typedQuery.setParameter("device_id", device_id);
+        return typedQuery.getResultList();
+    }
+
+    @Override
+    public List<NearVehicle> findAll() {
+        return em.createQuery("SELECT nv FROM Near_Vehicle nv", NearVehicle.class)
                 .getResultList();
     }
 
     @Override
-    public <S extends Near_Vehicle> Optional<S> findOne(Example<S> example) {
+    public <S extends NearVehicle> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends Near_Vehicle> List<S> findAll(Example<S> example) {
+    public <S extends NearVehicle> List<S> findAll(Example<S> example) {
         return null;
     }
 
     @Override
-    public <S extends Near_Vehicle> List<S> findAll(Example<S> example, Sort sort) {
+    public <S extends NearVehicle> List<S> findAll(Example<S> example, Sort sort) {
         return null;
     }
 
     @Override
-    public <S extends Near_Vehicle> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends NearVehicle> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public List<Near_Vehicle> findAll(Sort sort) {
+    public List<NearVehicle> findAll(Sort sort) {
         return null;
     }
 
     @Override
-    public List<Near_Vehicle> findAllById(Iterable<Long> longs) {
+    public List<NearVehicle> findAllById(Iterable<Long> longs) {
         return null;
     }
 
     @Override
-    public Page<Near_Vehicle> findAll(Pageable pageable) {
+    public Page<NearVehicle> findAll(Pageable pageable) {
         return null;
     }
 
@@ -101,12 +109,12 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public <S extends Near_Vehicle> S saveAndFlush(S entity){
+    public <S extends NearVehicle> S saveAndFlush(S entity){
         return null;
     }
 
     @Override
-    public <S extends Near_Vehicle> List<S> saveAllAndFlush(Iterable<S> entities) {
+    public <S extends NearVehicle> List<S> saveAllAndFlush(Iterable<S> entities) {
         List<S> result = new ArrayList<>();
         if (entities == null) {
             return result;
@@ -119,7 +127,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<Near_Vehicle> entities) {
+    public void deleteAllInBatch(Iterable<NearVehicle> entities) {
 
     }
 
@@ -134,27 +142,27 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public Near_Vehicle getOne(Long aLong) {
+    public NearVehicle getOne(Long aLong) {
         return null;
     }
 
     @Override
-    public Near_Vehicle getById(Long aLong) {
+    public NearVehicle getById(Long aLong) {
         return null;
     }
 
     @Override
-    public Near_Vehicle getReferenceById(Long aLong) {
+    public NearVehicle getReferenceById(Long aLong) {
         return null;
     }
 
     @Override
-    public <S extends Near_Vehicle> long count(Example<S> example) {
+    public <S extends NearVehicle> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends Near_Vehicle> boolean exists(Example<S> example) {
+    public <S extends NearVehicle> boolean exists(Example<S> example) {
         return false;
     }
 
@@ -164,7 +172,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public <S extends Near_Vehicle> List<S> saveAll(Iterable<S> entities) {
+    public <S extends NearVehicle> List<S> saveAll(Iterable<S> entities) {
         return null;
     }
     @Override
@@ -178,7 +186,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public void delete(Near_Vehicle entity) {
+    public void delete(NearVehicle entity) {
 
     }
 
@@ -188,7 +196,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public void deleteAll(Iterable<? extends Near_Vehicle> entities) {
+    public void deleteAll(Iterable<? extends NearVehicle> entities) {
 
     }
 

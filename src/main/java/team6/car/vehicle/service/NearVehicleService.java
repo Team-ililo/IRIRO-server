@@ -1,13 +1,9 @@
 package team6.car.vehicle.service;
 
-import team6.car.vehicle.domain.Near_Vehicle;
+import team6.car.vehicle.DTO.NearVehicleDto;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 public interface NearVehicleService {
-
-    Near_Vehicle enrollDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking);
-
-    Near_Vehicle modifyDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking);
-    Near_Vehicle getDeparturetime(Long id);
+    List<NearVehicleDto> getNearVehicle(Long device_id);
 }

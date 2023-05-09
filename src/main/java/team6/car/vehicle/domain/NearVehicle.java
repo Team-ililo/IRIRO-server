@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity(name="Near_Vehicle_info")
 @Table(name="Near_Vehicle_info")
-public class Near_Vehicle {
+public class NearVehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long near_vehicle_id;

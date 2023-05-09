@@ -24,8 +24,8 @@ public class Near_Vehicle {
     private String near_vehicle_model;
     @Column(name="near_vehicle_color")
     private String near_vehicle_color;
-    @Column(name="near_vehicle_time")
-    private LocalDateTime near_vehicle_time;
+    @Column(name="near_vehicle_departuretime")
+    private LocalDateTime near_vehicle_departuretime;
     @Column(name="no_departure")
     private Boolean No_departure;
     @ManyToOne(fetch = FetchType.LAZY)

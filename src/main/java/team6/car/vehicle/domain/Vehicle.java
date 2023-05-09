@@ -24,8 +24,8 @@ public class Vehicle {
     private String vehicle_model;
     @Column(name="vehicle_color")
     private String vehicle_color;
-    @Column(name="vehicle_time")
-    private LocalDateTime vehicle_time;
+    @Column(name="vehicle_departuretime")
+    private LocalDateTime vehicle_departuretime;
     @Column(name="no_departure")
     private Boolean No_departure;
     @ManyToOne(fetch = FetchType.LAZY)

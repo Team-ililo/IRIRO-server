@@ -3,43 +3,53 @@ package team6.car.vehicle.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team6.car.device.domain.Device;
+import team6.car.device.domain.Near_Device;
+import team6.car.device.repository.DeviceRepository;
+import team6.car.device.repository.NearDeviceRepository;
 import team6.car.vehicle.DTO.NearVehicleDto;
-import team6.car.vehicle.domain.Near_Vehicle;
+import team6.car.vehicle.domain.NearVehicle;
 import team6.car.vehicle.repository.NearVehicleRepository;
+import team6.car.vehicle.repository.VehicleRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class NearVehicleServiceImpl implements NearVehicleService {
     private final NearVehicleRepository near_VehicleRepository;
+    private final VehicleRepository vehicleRepository;
+    private final DeviceRepository deviceRepository;
+    private final NearDeviceRepository nearDeviceRepository;
 
-    /** 출차 시간 등록 **/
-    @Override
-    public Near_Vehicle enrollDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking){
-        Near_Vehicle near_vehicle=near_VehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
-        NearVehicleDto near_vehicleDto= NearVehicleDto.builder()
-                                        .exitTime(exitTime)
-                                        .isLongTermParking(isLongTermParking)
-                                        .build();
-        near_vehicle.setNear_vehicle_departuretime(near_vehicleDto.getExitTime());
-        return near_VehicleRepository.save(near_vehicle);
+    /** 필요하면 Near_Vehicle에 정보 저장하는 기능 추가**/
+
+    /** 주변 차량 정보 조회 **/
+    public List<NearVehicleDto> getNearVehicle(Long device_id) {
+        Device device = deviceRepository.findById(device_id)
+                .orElseThrow(() -> new EntityNotFoundException("Device not found"));
+        Near_Device nearDevice = nearDeviceRepository.findByDevice(device_id)
+                .orElseThrow(() -> new EntityNotFoundException("Near Device not found"));
+
+        LocalDateTime myDepartureTime = vehicleRepository.findById(device_id).orElseThrow(() -> new EntityNotFoundException("Vehicle not found")).getVehicle_departuretime();
+
+        List<NearVehicle> nearVehicles = near_VehicleRepository.findByNearDeviceDeviceIdAndNoDepartureIsFalse(device_id);
+
+        return nearVehicles.stream()
+                .map(nearVehicle -> NearVehicleDto.builder()
+                        .id(nearVehicle.getNear_vehicle_id())
+                        .vehicle_number(nearVehicle.getNear_vehicle_number())
+                        .model(nearVehicle.getNear_vehicle_model())
+                        .color(nearVehicle.getNear_vehicle_color())
+                        .exitTime(nearVehicle.getNear_vehicle_departuretime())
+                        .isLongTermParking(nearVehicle.getNo_departure())
+                        .isSatisfied(myDepartureTime.isBefore(nearVehicle.getNear_vehicle_departuretime()))
+                        .build())
+                .collect(Collectors.toList());
     }
 
-    /** 출차 시간 수정 **/
-    @Override
-    public Near_Vehicle modifyDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking){
-        Near_Vehicle near_vehicle=near_VehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
-        near_vehicle.setNear_vehicle_departuretime(exitTime);
-        near_vehicle.setNo_departure(isLongTermParking);
-        return near_vehicle;
-    }
-
-    /** 출차 시간 조회 **/
-    @Override
-    public Near_Vehicle getDeparturetime(Long id){
-        Near_Vehicle near_vehicle=near_VehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
-        return near_vehicle;
-    }
 }

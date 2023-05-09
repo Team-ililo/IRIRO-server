@@ -1,6 +1,7 @@
 package team6.car.member.controller;
 
 import lombok.RequiredArgsConstructor;
+import team6.car.member.DTO.MemberProfileDto;
 import team6.car.member.domain.Member;
 import team6.car.member.DTO.UserDto;
 import team6.car.member.response.Message;
@@ -13,11 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team6.car.member.DTO.LoginDto;
-import team6.car.member.repository.MemberRepositoryImpl;
-import team6.car.member.service.LoginService;
 
 import java.nio.charset.Charset;
-import java.util.Optional;
+import java.util.List;
 
 @RequiredArgsConstructor //의존성 주입
 @RestController // annotation 역할 :  spring bean으로 해당 클래스를 spring-container에서 관리
@@ -55,8 +54,8 @@ public class MemberController {
     }
 
     @GetMapping("/members/{member_id}") //회원 정보 조회
-    public ResponseEntity<?> getMemberById(@PathVariable Long member_id) {
-        Optional<Member> member = memberService.findOne(member_id);
+    public ResponseEntity<?> getMemberById(@PathVariable Long member_id) throws Exception {
+        List<MemberProfileDto> member = memberService.getMemberById(member_id);
         Message message = new Message();
         HttpHeaders headers= new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));

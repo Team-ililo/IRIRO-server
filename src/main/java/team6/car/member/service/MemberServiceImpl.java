@@ -2,20 +2,25 @@ package team6.car.member.service;
 
 import lombok.RequiredArgsConstructor;
 import team6.car.apartment.domain.Apartment;
+import team6.car.member.DTO.MemberProfileDto;
 import team6.car.member.domain.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team6.car.member.DTO.UserDto;
 import team6.car.device.domain.Device;
+import team6.car.member.response.StatusEnum;
 import team6.car.vehicle.domain.Vehicle;
 import team6.car.apartment.repository.ApartmentRepository;
 import team6.car.device.repository.DeviceRepository;
 import team6.car.vehicle.repository.VehicleRepository;
 import team6.car.member.repository.MemberRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+
+import static team6.car.member.response.StatusEnum.NOT_FOUND;
 
 @Service //서비스 스프링 빈으로 등록
 @Transactional
@@ -87,6 +92,16 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
+    /**회원 id 로 정보 조회 (이메일, 차량 번호, 주소, 신고 횟수)**/
+    public List<MemberProfileDto> getMemberById(Long id) throws Exception{
+        List<MemberProfileDto> memberProfileDto = new ArrayList<>();
+        Member member = memberRepository.findById(id).orElseThrow(() -> new Exception("존재하지 않는 회원입니다."));
+        Vehicle vehicle = vehicleRepository.findByMemberId(id).orElseThrow(() -> new Exception("존재하지 않는 회원입니다."));
+
+        MemberProfileDto memberProfileDto1 = new MemberProfileDto(member.getEmail(), vehicle.getVehicle_number(), member.getAddress(), member.getNumber_of_complaints());
+        memberProfileDto.add(memberProfileDto1);
+        return memberProfileDto;
+    }
 
     /**전체 회원 조회**/
     public List<Member> findMembers(){
@@ -95,14 +110,4 @@ public class MemberServiceImpl implements MemberService {
     public Optional<Member> findOne(Long memberId){
         return memberRepository.findById(memberId);
     }
-
-    /**회원 id 로 정보 조회**//*
-    public Member getMemberById(Long id) {
-        Optional<Member> member = memberRepository.findById(id);
-        if(member.isPresent()) {
-            return member.get();
-        } else {
-            throw new MemberNotFoundException("Member not found with id: " + id);
-        }
-    }*/
 }

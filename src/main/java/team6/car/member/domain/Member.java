@@ -2,6 +2,7 @@ package team6.car.member.domain;
 
 import lombok.*;
 import team6.car.apartment.domain.Apartment;
+import team6.car.vehicle.domain.Vehicle;
 
 import javax.persistence.*;
 
@@ -30,4 +31,6 @@ public class Member {
     @ManyToOne(fetch = FetchType.LAZY) //many = member, one = apartment 하나의 아파트는 여러 명의 멤버를 가질 수 있다
     @JoinColumn(name="apartment_id") //FK
     private Apartment apartment;
+    @OneToOne(mappedBy = "member")
+    private Vehicle vehicle;
 }

@@ -28,10 +28,10 @@ public class Vehicle {
     private LocalDateTime vehicle_time;
     @Column(name="no_departure")
     private Boolean No_departure;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id") //FK
     private Member member;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="device_id") //FK
     private Device device;
 }

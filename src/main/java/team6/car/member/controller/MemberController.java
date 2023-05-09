@@ -2,6 +2,8 @@ package team6.car.member.controller;
 
 import lombok.RequiredArgsConstructor;
 import team6.car.member.DTO.MemberProfileDto;
+import team6.car.member.DTO.ReportDto;
+import team6.car.member.domain.Complaint;
 import team6.car.member.domain.Member;
 import team6.car.member.DTO.UserDto;
 import team6.car.member.response.Message;
@@ -63,6 +65,19 @@ public class MemberController {
         message.setStatus(StatusEnum.OK);
         message.setMessage("회원 정보 조회 성공");
         message.setData(member);
+        return new ResponseEntity<>(message, headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/members/{member_id}/complaints") //신고하기
+    public ResponseEntity<?> report(@RequestBody ReportDto reportDto) throws Exception {
+        Complaint complaint = memberService.report(reportDto);
+        Message message = new Message();
+        HttpHeaders headers= new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        message.setStatus(StatusEnum.OK);
+        message.setMessage("신고하기 성공");
+        message.setData(complaint);
         return new ResponseEntity<>(message, headers, HttpStatus.OK);
     }
 }

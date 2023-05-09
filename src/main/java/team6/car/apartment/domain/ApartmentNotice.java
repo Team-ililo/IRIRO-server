@@ -13,13 +13,16 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name="Apartment_Notice_info")
-public class Apartment_Notice {
+public class ApartmentNotice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long apartment_notice_id;
     @CreatedDate
     @Column(name="apartment_notice_date", updatable = false)
     private LocalDateTime apartment_notice_date;
+
+    @Column(name="apartment_notice")
+    private String apartment_notice;
     @ManyToOne(fetch = FetchType.LAZY) //many = Apartment notice, one = apartment 하나의 아파트는 여러 개의 공지를 가질 수 있다
     @JoinColumn(/*referencedColumnName="apartment_id"*/ name="apartment_id") //FK
     private Apartment apartment;

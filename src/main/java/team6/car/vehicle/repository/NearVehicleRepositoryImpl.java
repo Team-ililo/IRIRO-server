@@ -44,7 +44,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     @Override
     public Optional<NearVehicle> findByNearDeviceId(Long id) {
         TypedQuery<NearVehicle> query = em.createQuery(
-                "SELECT nv FROM Near_Vehicle nv WHERE nv.near_device_id = :near_device_id",
+                "SELECT nv FROM Near_Vehicle_info nv WHERE nv.near_device_id = :near_device_id",
                 NearVehicle.class);
         query.setParameter("near_device_id", id);
         try {
@@ -56,7 +56,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
 
     @Override
     public List<NearVehicle> findByNearDeviceDeviceIdAndNoDepartureIsFalse(Long device_id) {
-        String query = "SELECT nv FROM Near_Vehicle nv JOIN nv.near_device nd WHERE nd.near_device_id = :device_id AND nv.No_departure = false";
+        String query = "SELECT nv FROM Near_Vehicle_info nv JOIN nv.near_device nd WHERE nd.near_device_id = :device_id AND nv.No_departure = false";
         TypedQuery<NearVehicle> typedQuery = em.createQuery(query, NearVehicle.class);
         typedQuery.setParameter("device_id", device_id);
         return typedQuery.getResultList();
@@ -64,7 +64,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
 
     @Override
     public List<NearVehicle> findAll() {
-        return em.createQuery("SELECT nv FROM Near_Vehicle nv", NearVehicle.class)
+        return em.createQuery("SELECT nv FROM Near_Vehicle_info nv", NearVehicle.class)
                 .getResultList();
     }
 

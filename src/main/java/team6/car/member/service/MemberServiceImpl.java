@@ -2,13 +2,14 @@ package team6.car.member.service;
 
 import lombok.RequiredArgsConstructor;
 import team6.car.apartment.domain.Apartment;
+import team6.car.apartment.repository.ApartmentRepository;
 import team6.car.member.domain.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team6.car.member.DTO.UserDto;
 import team6.car.device.domain.Device;
 import team6.car.vehicle.domain.Vehicle;
-import team6.car.apartment.repository.ApartmentRepository;
+import team6.car.apartment.repository.ApartmentNoticeRepository;
 import team6.car.device.repository.DeviceRepository;
 import team6.car.vehicle.repository.VehicleRepository;
 import team6.car.member.repository.MemberRepository;
@@ -22,6 +23,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+    private final ApartmentNoticeRepository apartmentNoticeRepository;
+
     private final ApartmentRepository apartmentRepository;
     private final DeviceRepository deviceRepository;
     private final VehicleRepository vehicleRepository;

@@ -1,7 +1,9 @@
-package team6.car.vehicle.response;
+package team6.car.apartment.response;
 
+import lombok.Data;
 import team6.car.member.response.StatusEnum;
 
+@Data
 public class Message {
 
     private StatusEnum status;
@@ -13,5 +15,4 @@ public class Message {
         this.data = null;
         this.message = null;
     }
-
 }

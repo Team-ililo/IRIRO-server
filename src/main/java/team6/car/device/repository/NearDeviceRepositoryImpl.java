@@ -30,7 +30,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
         return near_device;
     }
     public List<Near_Device> findAll() {
-        String query = "SELECT nd FROM Near_Device nd";
+        String query = "SELECT nd FROM Near_Device_info nd";
         TypedQuery<Near_Device> typedQuery = em.createQuery(query, Near_Device.class);
         return typedQuery.getResultList();
     }
@@ -47,7 +47,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
 
     @Override
     public Optional<Near_Device> findByDevice(Long device_id) {
-        String query = "SELECT nd FROM Near_Device nd WHERE nd.device_id = :device_id";
+        String query = "SELECT nd FROM Near_Device_info nd WHERE nd.device_id = :device_id";
         TypedQuery<Near_Device> typedQuery = em.createQuery(query, Near_Device.class);
         typedQuery.setParameter("device_id", device_id);
         List<Near_Device> nearDevices = typedQuery.getResultList();

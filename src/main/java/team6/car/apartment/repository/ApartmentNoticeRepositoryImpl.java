@@ -1,11 +1,11 @@
-package team6.car.vehicle.repository;
+package team6.car.apartment.repository;
 
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
-import org.springframework.stereotype.Repository;
+import team6.car.apartment.domain.ApartmentNotice;
 import team6.car.vehicle.domain.Vehicle;
 
 import javax.persistence.EntityManager;
@@ -15,76 +15,66 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-@Repository
-public class VehicleRepositoryImpl implements VehicleRepository {
-
+public class ApartmentNoticeRepositoryImpl implements ApartmentNoticeRepository{
     @PersistenceContext
     private final EntityManager em;
-    public VehicleRepositoryImpl(EntityManager em){
+    public ApartmentNoticeRepositoryImpl(EntityManager em){
         this.em=em;
     }
 
     @Override
-    public Vehicle save(Vehicle vehicle){
-        em.persist(vehicle);
-        return vehicle;
+    public ApartmentNotice save(ApartmentNotice apartmentNotice){
+        em.persist(apartmentNotice);
+        return apartmentNotice;
     }
 
     @Override
-    public <S extends Vehicle, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends ApartmentNotice, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
     @Override
-    public Optional<Vehicle> findById(Long id) {
-        return Optional.ofNullable(em.find(Vehicle.class, id));
+    public Optional<ApartmentNotice> findById(Long id) {
+        return Optional.ofNullable(em.find(ApartmentNotice.class, id));
     }
 
     @Override
-    public Optional<Vehicle> findByIdWithMember(Long id) {
-        return Optional.ofNullable(em.createQuery(
-                        "SELECT v FROM Vehicle_info v JOIN FETCH v.member WHERE v.id=:id",Vehicle.class)
-                .setParameter("id",id)
-                .getSingleResult());
-    }
-
-    @Override
-    public List<Vehicle> findAll() {
-        return em.createQuery("SELECT v FROM Vehicle_info v", Vehicle.class)
+    public List<ApartmentNotice> findAll() {
+        return em.createQuery("SELECT a FROM Apartment_Notice_info a", ApartmentNotice.class)
                 .getResultList();
     }
 
     @Override
-    public <S extends Vehicle> Optional<S> findOne(Example<S> example) {
+    public <S extends ApartmentNotice> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends Vehicle> List<S> findAll(Example<S> example) {
+    public <S extends ApartmentNotice> List<S> findAll(Example<S> example) {
         return null;
     }
 
     @Override
-    public <S extends Vehicle> List<S> findAll(Example<S> example, Sort sort) {
+    public <S extends ApartmentNotice> List<S> findAll(Example<S> example, Sort sort) {
         return null;
     }
 
     @Override
-    public <S extends Vehicle> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends ApartmentNotice> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public List<Vehicle> findAll(Sort sort) {
+    public List<ApartmentNotice> findAll(Sort sort) {
         return null;
     }
 
     @Override
-    public List<Vehicle> findAllById(Iterable<Long> longs) {
+    public List<ApartmentNotice> findAllById(Iterable<Long> longs) {
         return null;
     }
 
     @Override
-    public Page<Vehicle> findAll(Pageable pageable) {
+    public Page<ApartmentNotice> findAll(Pageable pageable) {
         return null;
     }
 
@@ -94,12 +84,12 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
-    public <S extends Vehicle> S saveAndFlush(S entity){
+    public <S extends ApartmentNotice> S saveAndFlush(S entity){
         return null;
     }
 
     @Override
-    public <S extends Vehicle> List<S> saveAllAndFlush(Iterable<S> entities) {
+    public <S extends ApartmentNotice> List<S> saveAllAndFlush(Iterable<S> entities) {
         List<S> result = new ArrayList<>();
         if (entities == null) {
             return result;
@@ -112,7 +102,7 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<Vehicle> entities) {
+    public void deleteAllInBatch(Iterable<ApartmentNotice> entities) {
 
     }
 
@@ -127,27 +117,27 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
-    public Vehicle getOne(Long aLong) {
+    public ApartmentNotice getOne(Long aLong) {
         return null;
     }
 
     @Override
-    public Vehicle getById(Long aLong) {
+    public ApartmentNotice getById(Long aLong) {
         return null;
     }
 
     @Override
-    public Vehicle getReferenceById(Long aLong) {
+    public ApartmentNotice getReferenceById(Long aLong) {
         return null;
     }
 
     @Override
-    public <S extends Vehicle> long count(Example<S> example) {
+    public <S extends ApartmentNotice> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends Vehicle> boolean exists(Example<S> example) {
+    public <S extends ApartmentNotice> boolean exists(Example<S> example) {
         return false;
     }
 
@@ -157,7 +147,7 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
-    public <S extends Vehicle> List<S> saveAll(Iterable<S> entities) {
+    public <S extends ApartmentNotice> List<S> saveAll(Iterable<S> entities) {
         return null;
     }
     @Override
@@ -171,7 +161,7 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
-    public void delete(Vehicle entity) {
+    public void delete(ApartmentNotice entity) {
 
     }
 
@@ -181,7 +171,7 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
-    public void deleteAll(Iterable<? extends Vehicle> entities) {
+    public void deleteAll(Iterable<? extends ApartmentNotice> entities) {
 
     }
 
@@ -189,5 +179,4 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     public void deleteAll() {
 
     }
-
 }

@@ -1,5 +1,6 @@
 package team6.car.vehicle.service;
 
+import team6.car.vehicle.DTO.VehicleDto;
 import team6.car.vehicle.domain.Near_Vehicle;
 import team6.car.vehicle.domain.Vehicle;
 
@@ -9,5 +10,5 @@ public interface VehicleService {
 
     Vehicle enrollDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking);
     Vehicle modifyDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking);
-    Vehicle getDeparturetime(Long id);
+    VehicleDto getDeparturetime(Long id);
 }

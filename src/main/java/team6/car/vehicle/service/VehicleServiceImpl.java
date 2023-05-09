@@ -3,6 +3,7 @@ package team6.car.vehicle.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team6.car.member.domain.Member;
 import team6.car.vehicle.DTO.Near_VehicleDto;
 import team6.car.vehicle.DTO.VehicleDto;
 import team6.car.vehicle.domain.Near_Vehicle;
@@ -42,8 +43,19 @@ public class VehicleServiceImpl implements VehicleService {
 
     /** 출차 시간 조회 **/
     @Override
-    public Vehicle getDeparturetime(Long id){
-        Vehicle vehicle=vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
-        return vehicle;
+    public VehicleDto getDeparturetime(Long id){
+        Vehicle vehicle = vehicleRepository.findByIdWithMember(id)
+                .orElseThrow(() -> new RuntimeException("차량 정보를 찾을 수 없습니다."));
+        Member member = vehicle.getMember();
+        String address = member.getAddress();
+        return VehicleDto.builder()
+                .id(vehicle.getVehicle_id())
+                .vehicle_number(vehicle.getVehicle_number())
+                .model(vehicle.getVehicle_model())
+                .color(vehicle.getVehicle_color())
+                .exitTime(vehicle.getVehicle_departuretime())
+                .isLongTermParking(vehicle.getNo_departure())
+                .address(address)
+                .build();
     }
 }

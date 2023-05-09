@@ -43,6 +43,14 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
+    public Optional<Vehicle> findByIdWithMember(Long id) {
+        return Optional.ofNullable(em.createQuery(
+                        "SELECT v FROM Vehicle v JOIN FETCH v.member WHERE v.id=:id",Vehicle.class)
+                .setParameter("id",id)
+                .getSingleResult());
+    }
+
+    @Override
     public List<Vehicle> findAll() {
         return em.createQuery("SELECT v FROM Vehicle v", Vehicle.class)
                 .getResultList();

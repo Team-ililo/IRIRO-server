@@ -18,11 +18,11 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Repository
-public class Near_VehicleRepositoryImpl implements Near_VehicleRepository {
+public class NearVehicleRepositoryImpl implements NearVehicleRepository {
 
     @PersistenceContext
     private final EntityManager em;
-    public Near_VehicleRepositoryImpl(EntityManager em){
+    public NearVehicleRepositoryImpl(EntityManager em){
         this.em=em;
     }
 

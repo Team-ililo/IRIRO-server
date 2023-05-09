@@ -4,11 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import team6.car.vehicle.DTO.Near_VehicleDto;
 import team6.car.vehicle.DTO.VehicleDto;
-import team6.car.vehicle.domain.Near_Vehicle;
 import team6.car.vehicle.domain.Vehicle;
-import team6.car.vehicle.service.Near_VehicleService;
 import team6.car.vehicle.service.VehicleService;
 
 @RequiredArgsConstructor

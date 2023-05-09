@@ -1,14 +1,13 @@
 package team6.car.vehicle.DTO;
 
 import lombok.*;
-import net.bytebuddy.asm.Advice;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Builder
-public class Near_VehicleDto {
+public class NearVehicleDto {
     private Long id;
     private String vehicle_number;
     private String model;

@@ -4,11 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team6.car.member.domain.Member;
-import team6.car.vehicle.DTO.Near_VehicleDto;
 import team6.car.vehicle.DTO.VehicleDto;
-import team6.car.vehicle.domain.Near_Vehicle;
 import team6.car.vehicle.domain.Vehicle;
-import team6.car.vehicle.repository.Near_VehicleRepository;
 import team6.car.vehicle.repository.VehicleRepository;
 
 import java.time.LocalDateTime;

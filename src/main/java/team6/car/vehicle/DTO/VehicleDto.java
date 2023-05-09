@@ -16,6 +16,6 @@ public class VehicleDto {
     private String color;
     private LocalDateTime exitTime;
     private boolean isLongTermParking;
-
+    private String address;
 
 }

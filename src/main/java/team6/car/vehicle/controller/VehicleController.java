@@ -32,9 +32,9 @@ public class VehicleController {
     }
 
     /** 출차 정보 조회 **/
-    @GetMapping("/vehicle/departuretime/{id}")
-    public ResponseEntity<Vehicle> getDeparturetime(@PathVariable Long id) {
-        Vehicle vehicle = vehicleService.getDeparturetime(id);
-        return ResponseEntity.ok(vehicle);
+    @GetMapping("/vehicleDto/departuretime/{id}")
+    public ResponseEntity<VehicleDto> getDeparturetime(@PathVariable Long id) {
+        VehicleDto vehicleDto = vehicleService.getDeparturetime(id);
+        return ResponseEntity.ok(vehicleDto);
     }
 }

@@ -1,5 +1,6 @@
 package team6.car.member.repository;
 import org.springframework.stereotype.Repository;
+
 import team6.car.apartment.domain.Apartment;
 import team6.car.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

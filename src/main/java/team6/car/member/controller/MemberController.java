@@ -1,11 +1,9 @@
 package team6.car.member.controller;
 
 import lombok.RequiredArgsConstructor;
-import team6.car.member.DTO.MemberProfileDto;
-import team6.car.member.DTO.ReportDto;
+import team6.car.member.DTO.*;
 import team6.car.member.domain.Complaint;
 import team6.car.member.domain.Member;
-import team6.car.member.DTO.UserDto;
 import team6.car.member.response.Message;
 import team6.car.member.response.StatusEnum;
 import team6.car.member.service.MemberServiceImpl;
@@ -15,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import team6.car.member.DTO.LoginDto;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -78,6 +75,19 @@ public class MemberController {
         message.setStatus(StatusEnum.OK);
         message.setMessage("신고하기 성공");
         message.setData(complaint);
+        return new ResponseEntity<>(message, headers, HttpStatus.OK);
+    }
+
+    @GetMapping("/members/{member_id}/complaints") //신고 내용 조회
+    public ResponseEntity<?> getReportInfo(@PathVariable Long member_id) throws Exception {
+        List<getReportDto> report = memberService.getReportInfo(member_id);
+        Message message = new Message();
+        HttpHeaders headers= new HttpHeaders();
+        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+
+        message.setStatus(StatusEnum.OK);
+        message.setMessage("신고 내용 조회 성공");
+        message.setData(report);
         return new ResponseEntity<>(message, headers, HttpStatus.OK);
     }
 }

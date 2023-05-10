@@ -9,6 +9,7 @@ import team6.car.vehicle.domain.Vehicle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -87,6 +88,11 @@ public class VehicleRepositoryImpl implements VehicleRepository{
     public void deleteAll() {
 
     }
+/*
+    @Override
+    public <S extends Vehicle> S save(S entity) {
+        return null;
+    }*/
 
     @Override
     public <S extends Vehicle> S save(S entity) {
@@ -97,6 +103,20 @@ public class VehicleRepositoryImpl implements VehicleRepository{
     public <S extends Vehicle> List<S> saveAll(Iterable<S> entities) {
         return null;
     }
+
+    @Override
+    public Optional<Vehicle> findByIdWithMember(Long id) {
+        return Optional.ofNullable(em.createQuery(
+                        "SELECT v FROM Vehicle_info v JOIN FETCH v.member WHERE v.id=:id",Vehicle.class)
+                .setParameter("id",id)
+                .getSingleResult());
+    }
+/*
+    @Override
+    public Vehicle save(Vehicle vehicle) {
+        em.persist(vehicle);
+        return vehicle;
+    }*/
 
     @Override
     public Optional<Vehicle> findById(Long aLong) {
@@ -120,7 +140,15 @@ public class VehicleRepositoryImpl implements VehicleRepository{
 
     @Override
     public <S extends Vehicle> List<S> saveAllAndFlush(Iterable<S> entities) {
-        return null;
+        List<S> result = new ArrayList<>();
+        if (entities == null) {
+            return result;
+        }
+        for (S entity : entities) {
+            result.add(saveAndFlush(entity));
+        }
+        flush();
+        return result;
     }
 
     @Override

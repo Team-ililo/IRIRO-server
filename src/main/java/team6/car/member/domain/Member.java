@@ -2,7 +2,6 @@ package team6.car.member.domain;
 
 import lombok.*;
 import team6.car.apartment.domain.Apartment;
-import team6.car.vehicle.domain.Vehicle;
 
 import javax.persistence.*;
 

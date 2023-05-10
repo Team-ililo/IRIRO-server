@@ -1,5 +1,6 @@
 package team6.car.vehicle.repository;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Repository
+@Primary
 public class NearVehicleRepositoryImpl implements NearVehicleRepository {
 
     @PersistenceContext

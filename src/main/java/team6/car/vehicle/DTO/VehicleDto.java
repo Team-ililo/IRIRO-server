@@ -18,4 +18,17 @@ public class VehicleDto {
     private boolean isLongTermParking;
     private String address;
 
+    public VehicleDto() {
+        // 기본 생성자
+    }
+    public VehicleDto(Long id, String vehicle_number, String model, String color, LocalDateTime exitTime, boolean isLongTermParking, String address) {
+        this.id = id;
+        this.vehicle_number = vehicle_number;
+        this.model = model;
+        this.color = color;
+        this.exitTime = exitTime;
+        this.isLongTermParking = isLongTermParking;
+        this.address = address;
+    }
+
 }

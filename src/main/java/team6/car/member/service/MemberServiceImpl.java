@@ -117,8 +117,10 @@ public class MemberServiceImpl implements MemberService {
         Long memberId = vehicle.getMember().getMember_id();
         //member id값 이용해 회원 정보 가져옴
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new Exception("존재하지 않는 회원입니다."));;
+        //신고당한 횟수 + 1 후 멤버 저장
+        updateMember(memberId, member.getName(), member.getPhone_number(), member.getEmail(), member.getPassword(), member.getAddress(), member.getNumber_of_complaints()+1, member.getApartment());
 
-        //complaint_info에 저장
+        //complaint_info에 complaint 정보 저장
         Complaint complaint = new Complaint();
         complaint.setComplaint_contents(reportDto.getComplaint_contents());
         complaint.setMember(member);
@@ -126,6 +128,20 @@ public class MemberServiceImpl implements MemberService {
 
         return complaint;
     }
+
+    /**회원 정보 수정**/
+    public void updateMember(Long id, String name, String phone_number, String email, String password, String address, int number_of_complaints, Apartment apartment) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid member Id:" + id));
+        member.setName(name);
+        member.setPhone_number(phone_number);
+        member.setEmail(email);
+        member.setPassword(password);
+        member.setAddress(address);
+        member.setNumber_of_complaints(number_of_complaints);
+        member.setApartment(apartment);
+        memberRepository.save(member);
+    }
+
 
     /**전체 회원 조회**/
     public List<Member> findMembers(){

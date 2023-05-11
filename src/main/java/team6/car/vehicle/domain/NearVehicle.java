@@ -1,5 +1,6 @@
 package team6.car.vehicle.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import team6.car.device.domain.Device;
 import team6.car.device.domain.NearDevice;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 public class NearVehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonProperty("id")
     private Long near_vehicle_id;
     @Column(name="near_vehicle_number")
     private String near_vehicle_number;

@@ -12,4 +12,5 @@ public interface ApartmentNoticeRepository extends JpaRepository<ApartmentNotice
     ApartmentNotice save(ApartmentNotice apartmentNotice);
     Optional<ApartmentNotice> findById(Long id);
     List<ApartmentNotice> findAll();
+    Optional<ApartmentNotice> findByApartmentId(Long apartmentId);
 }

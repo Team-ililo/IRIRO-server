@@ -8,8 +8,7 @@ import org.springframework.data.repository.query.FluentQuery;
 import team6.car.apartment.domain.ApartmentNotice;
 import team6.car.vehicle.domain.Vehicle;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +34,20 @@ public class ApartmentNoticeRepositoryImpl implements ApartmentNoticeRepository{
     @Override
     public Optional<ApartmentNotice> findById(Long id) {
         return Optional.ofNullable(em.find(ApartmentNotice.class, id));
+    }
+
+    @Override
+    public Optional<ApartmentNotice> findByApartmentId(Long apartment_id) {
+        String query = "SELECT an FROM ApartmentNotice an WHERE an.apartment.apartment_id = :apartment_id";
+        TypedQuery<ApartmentNotice> typedQuery = em.createQuery(query, ApartmentNotice.class);
+        typedQuery.setParameter("apartment_id", apartment_id);
+
+        try {
+            ApartmentNotice apartmentNotice = typedQuery.getSingleResult();
+            return Optional.ofNullable(apartmentNotice);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

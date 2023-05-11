@@ -18,5 +18,5 @@ public class UserDto {
     private String email;
     private String password;
     private String pw_check;
-    private String device_id;
+    private Long device_id;
 }

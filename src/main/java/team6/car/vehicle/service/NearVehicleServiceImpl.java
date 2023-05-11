@@ -31,7 +31,7 @@ public class NearVehicleServiceImpl implements NearVehicleService {
     /** 필요하면 Near_Vehicle에 정보 저장하는 기능 추가**/
 
     /** 주변 차량 정보 조회 **/
-    /** 주변 차량 정보 조회 **/
+
     public List<NearVehicleDto> getNearVehicle(Long device_id) {
         Device device = deviceRepository.findById(device_id)
                 .orElseThrow(() -> new EntityNotFoundException("Device not found"));

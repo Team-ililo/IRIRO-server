@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MemberService {
     Member register(UserDto userDto) throws Exception;
-    Member login(String email, String password) throws Exception;
+    /*Member login(String email, String password) throws Exception;*/
     List<MemberProfileDto> getMemberById(Long id) throws Exception;
     Complaint report(ReportDto reportDto) throws Exception;
     List<getReportDto> getReportInfo(Long id) throws Exception;

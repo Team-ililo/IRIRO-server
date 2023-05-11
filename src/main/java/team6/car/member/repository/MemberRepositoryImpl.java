@@ -27,6 +27,30 @@ public class MemberRepositoryImpl implements MemberRepository {
         em.persist(member);
         return null;
     }
+    @Override
+    public Optional<Member> findById(Long id) { //member_id
+        Member member = em.find(Member.class, id);
+        return Optional.ofNullable(member);
+    }
+    @Override
+    public Optional<Member> findByEmail(String email) { //멤버 이메일
+        // PK 즉 필수 키가 아니면 중복과 부재의 문제가 있으므로 쿼리를 작성해야함
+        List<Member> result = em.createQuery("select m from Member_info m where m.email = :email",Member.class)
+                .setParameter("email", email)
+                .getResultList();
+        return result.stream().findAny();
+    }
+    public void deleteMember(Long member_id) {
+        Member member = em.find(Member.class, member_id);
+        if (member != null) {
+            em.remove(member);
+        }
+    }
+    @Override
+    public List<Member> findAll() {
+        return em.createQuery("select m from Member_info m",Member.class)
+                .getResultList();
+    }
 
     @Override
     public void flush() {
@@ -109,34 +133,8 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findById(Long id) { //member_id
-        Member member = em.find(Member.class, id);
-        return Optional.ofNullable(member);
-    }
-
-    @Override
     public boolean existsById(Long aLong) {
         return false;
-    }
-
-    @Override
-    public Optional<Member> findByEmail(String email) { //멤버 이메일
-        // PK 즉 필수 키가 아니면 중복과 부재의 문제가 있으므로 쿼리를 작성해야함
-        List<Member> result = em.createQuery("select m from Member_info m where m.email = :email",Member.class)
-                .setParameter("email", email)
-                .getResultList();
-        return result.stream().findAny();
-    }
-
-    @Override
-    public List<Member> findAll() {
-        return em.createQuery("select m from Member_info m",Member.class)
-                .getResultList();
-    }
-
-    @Override
-    public List<Member> findByApartment(Apartment apartment) {
-        return null;
     }
 
     @Override

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
+import team6.car.member.domain.Member;
 import team6.car.vehicle.domain.Vehicle;
 
 import javax.persistence.EntityManager;
@@ -95,10 +96,10 @@ public class VehicleRepositoryImpl implements VehicleRepository{
     }*/
 
     @Override
-    public <S extends Vehicle> S save(S entity) {
+    public Vehicle save(Vehicle vehicle) {
+        em.persist(vehicle);
         return null;
     }
-
     @Override
     public <S extends Vehicle> List<S> saveAll(Iterable<S> entities) {
         return null;

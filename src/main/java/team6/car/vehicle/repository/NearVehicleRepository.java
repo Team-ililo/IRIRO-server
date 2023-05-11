@@ -15,6 +15,6 @@ public interface NearVehicleRepository extends JpaRepository<NearVehicle, Long> 
     List<NearVehicle> findByNearDeviceDeviceIdAndNoDepartureIsFalse(Long deviceId);
 
     Optional<NearVehicle> findByNearDeviceId(Long id);
-
+    Optional<List<NearVehicle>> findByDeviceId(Long device_id);
     List<NearVehicle> findAll();
 }

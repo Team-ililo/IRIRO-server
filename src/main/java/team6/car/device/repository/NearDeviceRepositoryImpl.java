@@ -6,12 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
-import team6.car.device.domain.Device;
-import team6.car.device.domain.Near_Device;
-import team6.car.vehicle.domain.Vehicle;
+import team6.car.device.domain.NearDevice;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -25,32 +22,32 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     private EntityManager em;
 
     @Override
-    public Near_Device save(Near_Device near_device){
+    public NearDevice save(NearDevice near_device){
         em.persist(near_device);
         return near_device;
     }
-    public List<Near_Device> findAll() {
+    public List<NearDevice> findAll() {
         String query = "SELECT nd FROM Near_Device_info nd";
-        TypedQuery<Near_Device> typedQuery = em.createQuery(query, Near_Device.class);
+        TypedQuery<NearDevice> typedQuery = em.createQuery(query, NearDevice.class);
         return typedQuery.getResultList();
     }
 
     @Override
-    public Optional<Near_Device> findById(Long id) {
-        return Optional.ofNullable(em.find(Near_Device.class, id));
+    public Optional<NearDevice> findById(Long id) {
+        return Optional.ofNullable(em.find(NearDevice.class, id));
     }
 
     @Override
-    public <S extends Near_Device, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends NearDevice, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
 
     @Override
-    public Optional<Near_Device> findByDevice(Long device_id) {
+    public Optional<NearDevice> findByDeviceId(Long device_id) {
         String query = "SELECT nd FROM Near_Device_info nd WHERE nd.device_id = :device_id";
-        TypedQuery<Near_Device> typedQuery = em.createQuery(query, Near_Device.class);
+        TypedQuery<NearDevice> typedQuery = em.createQuery(query, NearDevice.class);
         typedQuery.setParameter("device_id", device_id);
-        List<Near_Device> nearDevices = typedQuery.getResultList();
+        List<NearDevice> nearDevices = typedQuery.getResultList();
         if (nearDevices.isEmpty()) {
             return Optional.empty();
         } else {
@@ -59,37 +56,37 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public <S extends Near_Device> Optional<S> findOne(Example<S> example) {
+    public <S extends NearDevice> Optional<S> findOne(Example<S> example) {
         return Optional.empty();
     }
 
     @Override
-    public <S extends Near_Device> List<S> findAll(Example<S> example) {
+    public <S extends NearDevice> List<S> findAll(Example<S> example) {
         return null;
     }
 
     @Override
-    public <S extends Near_Device> List<S> findAll(Example<S> example, Sort sort) {
+    public <S extends NearDevice> List<S> findAll(Example<S> example, Sort sort) {
         return null;
     }
 
     @Override
-    public <S extends Near_Device> Page<S> findAll(Example<S> example, Pageable pageable) {
+    public <S extends NearDevice> Page<S> findAll(Example<S> example, Pageable pageable) {
         return null;
     }
 
     @Override
-    public List<Near_Device> findAll(Sort sort) {
+    public List<NearDevice> findAll(Sort sort) {
         return null;
     }
 
     @Override
-    public List<Near_Device> findAllById(Iterable<Long> longs) {
+    public List<NearDevice> findAllById(Iterable<Long> longs) {
         return null;
     }
 
     @Override
-    public Page<Near_Device> findAll(Pageable pageable) {
+    public Page<NearDevice> findAll(Pageable pageable) {
         return null;
     }
 
@@ -99,12 +96,12 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public <S extends Near_Device> S saveAndFlush(S entity){
+    public <S extends NearDevice> S saveAndFlush(S entity){
         return null;
     }
 
     @Override
-    public <S extends Near_Device> List<S> saveAllAndFlush(Iterable<S> entities) {
+    public <S extends NearDevice> List<S> saveAllAndFlush(Iterable<S> entities) {
         List<S> result = new ArrayList<>();
         if (entities == null) {
             return result;
@@ -117,7 +114,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public void deleteAllInBatch(Iterable<Near_Device> entities) {
+    public void deleteAllInBatch(Iterable<NearDevice> entities) {
 
     }
 
@@ -132,27 +129,27 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public Near_Device getOne(Long aLong) {
+    public NearDevice getOne(Long aLong) {
         return null;
     }
 
     @Override
-    public Near_Device getById(Long aLong) {
+    public NearDevice getById(Long aLong) {
         return null;
     }
 
     @Override
-    public Near_Device getReferenceById(Long aLong) {
+    public NearDevice getReferenceById(Long aLong) {
         return null;
     }
 
     @Override
-    public <S extends Near_Device> long count(Example<S> example) {
+    public <S extends NearDevice> long count(Example<S> example) {
         return 0;
     }
 
     @Override
-    public <S extends Near_Device> boolean exists(Example<S> example) {
+    public <S extends NearDevice> boolean exists(Example<S> example) {
         return false;
     }
 
@@ -162,7 +159,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public <S extends Near_Device> List<S> saveAll(Iterable<S> entities) {
+    public <S extends NearDevice> List<S> saveAll(Iterable<S> entities) {
         return null;
     }
     @Override
@@ -176,7 +173,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public void delete(Near_Device entity) {
+    public void delete(NearDevice entity) {
 
     }
 
@@ -186,7 +183,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public void deleteAll(Iterable<? extends Near_Device> entities) {
+    public void deleteAll(Iterable<? extends NearDevice> entities) {
 
     }
 

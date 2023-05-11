@@ -10,6 +10,10 @@ import team6.car.vehicle.domain.Vehicle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,16 +44,27 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
+    public Optional<Vehicle> findByDeviceId(Long deviceId) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Vehicle> query = cb.createQuery(Vehicle.class);
+        Root<Vehicle> root = query.from(Vehicle.class);
+        query.select(root)
+                .where(cb.equal(root.get("device").get("device_id"), deviceId));
+
+        TypedQuery<Vehicle> typedQuery = em.createQuery(query);
+        return typedQuery.getResultStream().findFirst();
+    }
+    @Override
     public Optional<Vehicle> findByIdWithMember(Long id) {
         return Optional.ofNullable(em.createQuery(
-                        "SELECT v FROM Vehicle_info v JOIN FETCH v.member WHERE v.id=:id",Vehicle.class)
+                        "SELECT v FROM Vehicle v JOIN FETCH v.member WHERE v.id=:id",Vehicle.class)
                 .setParameter("id",id)
                 .getSingleResult());
     }
 
     @Override
     public List<Vehicle> findAll() {
-        return em.createQuery("SELECT v FROM Vehicle_info v", Vehicle.class)
+        return em.createQuery("SELECT v FROM Vehicle v", Vehicle.class)
                 .getResultList();
     }
 

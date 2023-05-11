@@ -9,8 +9,8 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name="Device_info")
-@Table(name="Device_info")
+@Entity(name="Device")
+@Table(name="device_info")
 public class Device {
     @Id
     private Long device_id;

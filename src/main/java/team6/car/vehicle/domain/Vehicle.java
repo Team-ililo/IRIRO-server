@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name="Vehicle_info")
-@Table(name="Vehicle_info")
+@Entity(name="Vehicle")
+@Table(name="vehicle_info")
 public class Vehicle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

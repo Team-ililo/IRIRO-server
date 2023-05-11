@@ -7,7 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
+import team6.car.device.domain.NearDevice;
 import team6.car.vehicle.domain.NearVehicle;
+import team6.car.vehicle.domain.Vehicle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -62,6 +64,37 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
         TypedQuery<NearVehicle> typedQuery = em.createQuery(query, NearVehicle.class);
         typedQuery.setParameter("device_id", device_id);
         return typedQuery.getResultList();
+    }
+
+    public Optional<List<NearVehicle>> findByDeviceId(Long device_id) {
+        // Step 1: Find Near_Device by device_id
+        String nearDeviceQuery = "SELECT nd FROM NearDevice nd WHERE nd.device.device_id = :device_id";
+        TypedQuery<NearDevice> nearDeviceTypedQuery = em.createQuery(nearDeviceQuery, NearDevice.class);
+        nearDeviceTypedQuery.setParameter("device_id", device_id);
+        NearDevice nearDevice = nearDeviceTypedQuery.getSingleResult();
+
+        // Step 2: Find Vehicles with matching near_device_id
+        String vehicleQuery = "SELECT v FROM Vehicle v WHERE v.device.device_id = :near_device_id";
+        TypedQuery<Vehicle> vehicleTypedQuery = em.createQuery(vehicleQuery, Vehicle.class);
+        vehicleTypedQuery.setParameter("near_device_id", nearDevice.getNear_device_id());
+        List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
+
+        // Step 3: Map Vehicle data to NearVehicle
+        List<NearVehicle> nearVehicles = new ArrayList<>();
+        for (Vehicle vehicle : vehicles) {
+            NearVehicle nearVehicle = new NearVehicle();
+            nearVehicle.setNear_vehicle_number(vehicle.getVehicle_number());
+            nearVehicle.setNear_vehicle_model(vehicle.getVehicle_model());
+            nearVehicle.setNear_vehicle_color(vehicle.getVehicle_color());
+            nearVehicle.setNear_vehicle_departuretime(vehicle.getVehicle_departuretime());
+            nearVehicle.setNo_departure(vehicle.getNo_departure());
+            nearVehicle.setNear_device(nearDevice);
+            nearVehicle.setDevice(vehicle.getDevice());
+            nearVehicles.add(nearVehicle);
+        }
+
+        // Step 4: Return the result
+        return Optional.of(nearVehicles);
     }
 
     @Override

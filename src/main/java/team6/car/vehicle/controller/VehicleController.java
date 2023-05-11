@@ -44,8 +44,8 @@ public class VehicleController {
 
     /** 주변 차량 정보 조회 **/
     @GetMapping("/nearvehicles/{device_id}")
-    public ResponseEntity<List<NearVehicleDto>> getNearVehicles(@PathVariable Long device_id) {
-        List<NearVehicleDto> nearVehicles = nearVehicleService.getNearVehicle(device_id);
+    public ResponseEntity<List<NearVehicleDto>> getNearVehicles(@PathVariable("device_id") Long deviceId) {
+        List<NearVehicleDto> nearVehicles = nearVehicleService.getNearVehicle(deviceId);
         return ResponseEntity.ok(nearVehicles);
     }
 }

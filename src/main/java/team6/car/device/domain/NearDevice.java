@@ -9,9 +9,9 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name="Near_Device_info")
-@Table(name="Near_Device_info")
-public class Near_Device {
+@Entity(name="NearDevice")
+@Table(name="near_device_info")
+public class NearDevice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long near_device_id;

@@ -51,7 +51,6 @@ public class NearVehicleServiceImpl implements NearVehicleService {
         return nearVehicles.stream()
                 .map(nearVehicle -> {
                     NearVehicleDto.NearVehicleDtoBuilder builder = NearVehicleDto.builder()
-                            .id(nearVehicle.getNear_vehicle_id())
                             .vehicle_number(nearVehicle.getNear_vehicle_number())
                             .model(nearVehicle.getNear_vehicle_model())
                             .color(nearVehicle.getNear_vehicle_color())

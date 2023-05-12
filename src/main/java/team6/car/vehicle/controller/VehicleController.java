@@ -2,6 +2,7 @@ package team6.car.vehicle.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import team6.car.vehicle.DTO.NearVehicleDto;
@@ -119,9 +120,45 @@ public class VehicleController {
 
     /** 출차 정보 조회 **/
     @GetMapping("/vehicleDto/departuretime/{id}")
-    public ResponseEntity<VehicleDto> getDeparturetime(@PathVariable Long id) {
-        VehicleDto vehicleDto = vehicleService.getDeparturetime(id);
-        return ResponseEntity.ok(vehicleDto);
+    public ResponseEntity<Message> getDeparturetime(@PathVariable Long id) {
+        Message responseMessage;
+        HttpStatus httpStatus;
+
+        try {
+            // 출차 정보 조회
+            VehicleDto vehicleDto = vehicleService.getDeparturetime(id);
+
+            if (vehicleDto != null) {
+                // 출차 정보가 있는 경우 성공 응답 생성
+                String message = "출차 정보 조회가 완료되었습니다.";
+                StatusEnum status = StatusEnum.OK;
+                responseMessage = new Message();
+                responseMessage.setStatus(status);
+                responseMessage.setMessage(message);
+                responseMessage.setData(vehicleDto);
+                httpStatus = HttpStatus.OK;
+            } else {
+                // 출차 정보가 없는 경우 NotFound 응답 생성
+                String message = "출차 정보가 존재하지 않습니다.";
+                StatusEnum status = StatusEnum.NOT_FOUND;
+                responseMessage = new Message();
+                responseMessage.setStatus(status);
+                responseMessage.setMessage(message);
+                responseMessage.setData(null);
+                httpStatus = HttpStatus.NOT_FOUND;
+            }
+        } catch (Exception e) {
+            // 출차 정보 조회 실패 응답 생성
+            String message = "출차 정보 조회에 실패하였습니다.";
+            StatusEnum status = StatusEnum.INTERNAL_SERVER_ERROR;
+            responseMessage = new Message();
+            responseMessage.setStatus(status);
+            responseMessage.setMessage(message);
+            responseMessage.setData(null);
+            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        return ResponseEntity.status(httpStatus).body(responseMessage);
     }
 
     /** 주변 차량 정보 조회 **/

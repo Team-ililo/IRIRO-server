@@ -43,8 +43,17 @@ public class VehicleController {
             responseMessage.setMessage(message);
             responseMessage.setData(null);
             response = ResponseEntity.ok(responseMessage);
+        } catch (IllegalArgumentException e) {
+            // 잘못된 요청인 경우 (BAD_REQUEST)
+            String message = "잘못된 요청입니다.";
+            StatusEnum status = StatusEnum.BAD_REQUEST;
+            Message responseMessage = new Message();
+            responseMessage.setStatus(status);
+            responseMessage.setMessage(message);
+            responseMessage.setData(null);
+            response = ResponseEntity.status(status.getStatusCode()).body(responseMessage);
         } catch (Exception e) {
-            // 출차 정보 등록 실패 응답 생성
+            // 내부 서버 오류인 경우 (INTERNAL_SERVER_ERROR)
             String message = "출차 시간 등록에 실패하였습니다.";
             StatusEnum status = StatusEnum.INTERNAL_SERVER_ERROR;
             Message responseMessage = new Message();

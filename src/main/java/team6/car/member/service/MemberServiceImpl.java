@@ -21,6 +21,7 @@ import team6.car.device.repository.DeviceRepository;
 import team6.car.vehicle.repository.VehicleRepository;
 import team6.car.member.repository.MemberRepository;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,21 +40,24 @@ public class MemberServiceImpl implements MemberService {
     /**회원 가입**/
     @Override
     public Member register(UserDto userDto) throws Exception {
-        /**
-         * 이미 존재하는 이메일로 회원가입 요청 시 -> 예외 발생
-         */
+        if (userDto.getVehicle_model()==null || userDto.getName()==null || userDto.getApartment_name()==null || userDto.getEmail()==null || userDto.getAddress()==null || userDto.getPhone_number()==null ||userDto.getVehicle_number()==null || userDto.getVehicle_color()==null || userDto.getPassword()==null || userDto.getPw_check()==null || userDto.getDevice_id()==null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "입력하지 않은 정보가 있는지 확인하세요.");
+        }
+        /**이미 존재하는 이메일로 회원가입 요청 시 -> 예외 발생**/
         if(memberRepository.findByEmail(userDto.getEmail()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "회원 정보가 존재합니다.");
         }
         //비밀번호 같은지 확인
         if(!Objects.equals(userDto.getPassword(), userDto.getPw_check())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Check your password");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
         }
-        /**
-         * 이미 존재하는 차량으로 회원가입 요청 시 -> 예외 발생
-         */
+        /**이미 존재하는 차량으로 회원가입 요청 시 -> 예외 발생**/
         if(vehicleRepository.findByVehicleNumber(userDto.getVehicle_number()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Vehicle already exists");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "등록된 차량입니다.");
+        }
+        /**이미 존재하는 디바이스으로 회원가입 요청 시 -> 예외 발생**/
+        if(deviceRepository.findById(userDto.getDevice_id()).isPresent()){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "등록된 디바이스입니다.");
         }
 
         //아파트 정보 저장
@@ -69,7 +73,6 @@ public class MemberServiceImpl implements MemberService {
         member.setEmail(userDto.getEmail());
         member.setPassword(userDto.getPassword());
         member.setAddress(userDto.getAddress());
-        //validateDuplicateMember(member); //중복회원검사
         memberRepository.save(member);
 
         //디바이스 정보 저장
@@ -89,31 +92,15 @@ public class MemberServiceImpl implements MemberService {
         return member;
     }
 
-    /**로그인**/
-    /*
-    @Override
-    public Member login(String email, String password) throws Exception {
-        Member member = memberRepository.findByEmail(email).orElseThrow(() -> new Exception("존재하지 않는 회원입니다."));
-        //비밀번호 같은지 확인
-        if(!Objects.equals(password, member.getPassword())){
-            throw new Exception("아이디 또는 비밀번호를 확인해주세요.");
-        }
-        // 사용자가 사는 아파트의 정보를 가져온다.
-        Apartment apartment = apartmentRepository.findById(member.getApartment().getApartment_id())
-                .orElseThrow(() -> new RuntimeException("아파트 정보를 찾지 못했습니다."));
-
-        return member;
-    }*/
-
     /**회원 id 로 정보 조회 (이메일, 차량 번호, 주소, 신고 횟수)**/
     @Override
     public List<MemberProfileDto> getMemberById(Long id) throws Exception{
         List<MemberProfileDto> memberProfileDto = new ArrayList<>();
         Member member = memberRepository.findById(id).orElseGet(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다.");
         });
         Vehicle vehicle = vehicleRepository.findByMemberId(id).orElseGet(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "차량 정보가 존재하지 않습니다.");
         });
 
         MemberProfileDto memberProfileDto1 = new MemberProfileDto(member.getEmail(), vehicle.getVehicle_number(), member.getAddress(), member.getNumber_of_complaints());
@@ -126,48 +113,35 @@ public class MemberServiceImpl implements MemberService {
     public Complaint report(ReportDto reportDto) throws Exception{
         //차량 번호로 차량 정보 가져온 후 외래키로 있는 member의 id값 저장
         Vehicle vehicle = vehicleRepository.findByVehicleNumber(reportDto.getVehicle_number()).orElseGet(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Vehicle not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "차량 정보가 존재하지 않습니다.");
         });
         Long memberId = vehicle.getMember().getMember_id();
         //member id값 이용해 회원 정보 가져옴
         Member member = memberRepository.findById(memberId).orElseGet(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다.");
         });
-        member = update(memberId, member.getName(), member.getPhone_number(), member.getEmail(), member.getPassword(), member.getAddress(), member.getNumber_of_complaints()+1, member.getApartment());
-        memberRepository.deleteMember(memberId);
-        memberRepository.save(member);
+        //회원 신고 당한 횟수 + 1 해서 저장
+        member = memberRepository.updateComplaintNumber(member);
+        member = memberRepository.update(member);
 
         //complaint_info에 저장
         Complaint complaint = new Complaint();
         complaint.setComplaint_contents(reportDto.getComplaint_contents());
         complaint.setMember(member);
         complaintRepository.save(complaint);
-
         return complaint;
     }
 
-    public Member update(Long member_id, String name, String phone_number, String email, String password, String address, int number_of_complaints, Apartment apartment){
-        Member member = new Member();
-        member.setMember_id(member_id);
-        member.setName(name);
-        member.setPhone_number(phone_number);
-        member.setEmail(email);
-        member.setPassword(password);
-        member.setAddress(address);
-        member.setNumber_of_complaints(number_of_complaints);
-        member.setApartment(apartment);
-        return member;
-    }
 
     /**신고 내용 조회**/
     @Override
     public List<getReportDto> getReportInfo(Long id) throws Exception {
         List<getReportDto> getReportDto1 = new ArrayList<>();
         Member member = memberRepository.findById(id).orElseGet(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Member not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다.");
         });
         Complaint complaint = complaintRepository.findComplaintByMemberId(id).orElseGet(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Complaint not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "신고 당한 내역이 존재하지 않습니다.");
         });
 
         getReportDto getReportDto2 = new getReportDto(complaint.getComplaint_contents(), member.getNumber_of_complaints());

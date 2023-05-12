@@ -17,8 +17,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Table(name="Complaint_info")
 public class Complaint {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long complaint_id;
     @Column(name="complaint_contents")
     private String complaint_contents;

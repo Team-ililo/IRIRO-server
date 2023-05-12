@@ -63,6 +63,7 @@ public class MemberController {
         }
     }
 
+    @ApiOperation(value="로그아웃", notes="로그아웃을 한다")
     @RequestMapping("/members/logout")
     public ResponseEntity<?> logout(HttpServletRequest request){
         HttpSession session = request.getSession(false);

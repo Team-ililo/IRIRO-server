@@ -25,6 +25,11 @@ public class ComplaintRepositoryImpl implements ComplaintRepository{
     public ComplaintRepositoryImpl(EntityManager em){
         this.em=em;
     }
+    @Override
+    public Complaint save(Complaint complaint) {
+        em.persist(complaint);
+        return null;
+    }
 
     /**회원 id로 정보 조회 (신고 당한 내용)**/
     @Override
@@ -85,12 +90,6 @@ public class ComplaintRepositoryImpl implements ComplaintRepository{
     public void deleteAll() {
 
     }
-
-    @Override
-    public <S extends Complaint> S save(S entity) {
-        return null;
-    }
-
     @Override
     public <S extends Complaint> List<S> saveAll(Iterable<S> entities) {
         return null;

@@ -12,6 +12,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     //인터페이스란 기능에 대한 명세 집합
     //공통적인 함수들을 정의하고 실질적인 repository에 상속 받는다
     Member save(Member member); //회원을 저장소에 저장
+    Member update(Member member);
+    Member updateComplaintNumber(Member updatedMember);
     Optional<Member> findById(Long id); //id로 받고 member 반환
     Optional<Member> findByEmail(String email); //ID(=email)로 받고 member 반환
     void deleteMember(Long member_id);

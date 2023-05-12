@@ -1,5 +1,6 @@
 package team6.car.member.repository;
 
+import org.springframework.transaction.annotation.Transactional;
 import team6.car.apartment.domain.Apartment;
 import team6.car.member.domain.Member;
 import org.springframework.data.domain.Example;
@@ -10,13 +11,17 @@ import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 @Repository //레포지토리 스프링 빈으로 등록
 public class MemberRepositoryImpl implements MemberRepository {
+    @PersistenceUnit
+    EntityManagerFactory emf;
     @PersistenceContext
     private final EntityManager em;
     public MemberRepositoryImpl(EntityManager em){
@@ -26,6 +31,37 @@ public class MemberRepositoryImpl implements MemberRepository {
     public Member save(Member member) {
         em.persist(member);
         return null;
+    }
+    @Transactional /**수정 이후 save**/
+    public Member update(Member member) {
+        return this.em.merge(member);
+    }
+
+    /**회원 정보 수정(신고당한 횟수 1 증가)**/
+    @Transactional
+    public Member updateComplaintNumber(Member updatedMember) {
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            // 수정할 회원 엔티티를 불러옵니다.
+            Member member = em.find(Member.class, updatedMember.getMember_id());
+
+            // 회원 정보를 수정합니다.
+            member.setName(updatedMember.getName());
+            member.setPhone_number(updatedMember.getPhone_number());
+            member.setEmail(updatedMember.getEmail());
+            member.setEmail(updatedMember.getEmail());
+            member.setPassword(updatedMember.getPassword());
+            member.setNumber_of_complaints(updatedMember.getNumber_of_complaints()+1);
+            member.setApartment(updatedMember.getApartment());
+
+            // EntityManager의 merge() 메소드를 이용하여 수정된 엔티티를 저장합니다.
+            em.merge(member);
+            // 수정된 회원 정보를 반환합니다.
+            return member;
+        } finally {
+            em.close();
+        }
     }
     @Override
     public Optional<Member> findById(Long id) { //member_id

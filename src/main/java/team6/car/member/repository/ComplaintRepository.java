@@ -10,5 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ComplaintRepository  extends JpaRepository<Complaint, Long> {
+    Complaint save(Complaint complaint);
     Optional<Complaint> findComplaintByMemberId(Long member_id);
 }

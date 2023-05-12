@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Repository
 @Primary
@@ -26,12 +27,13 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
 
     @PersistenceContext
     private final EntityManager em;
-    public NearVehicleRepositoryImpl(EntityManager em){
-        this.em=em;
+
+    public NearVehicleRepositoryImpl(EntityManager em) {
+        this.em = em;
     }
 
     @Override
-    public NearVehicle save(NearVehicle near_vehicle){
+    public NearVehicle save(NearVehicle near_vehicle) {
         em.persist(near_vehicle);
         return near_vehicle;
     }
@@ -40,6 +42,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     public <S extends NearVehicle, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
         return null;
     }
+
     @Override
     public Optional<NearVehicle> findById(Long id) {
         return Optional.ofNullable(em.find(NearVehicle.class, id));
@@ -71,31 +74,36 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
         String nearDeviceQuery = "SELECT nd FROM NearDevice nd WHERE nd.device.device_id = :device_id";
         TypedQuery<NearDevice> nearDeviceTypedQuery = em.createQuery(nearDeviceQuery, NearDevice.class);
         nearDeviceTypedQuery.setParameter("device_id", device_id);
-        NearDevice nearDevice = nearDeviceTypedQuery.getSingleResult();
+        List<NearDevice> nearDevices = nearDeviceTypedQuery.getResultList();
 
-        // Step 2: Find Vehicles with matching near_device_id
-        String vehicleQuery = "SELECT v FROM Vehicle v WHERE v.device.device_id = :near_device_id";
-        TypedQuery<Vehicle> vehicleTypedQuery = em.createQuery(vehicleQuery, Vehicle.class);
-        vehicleTypedQuery.setParameter("near_device_id", nearDevice.getNear_device_id());
-        List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
+        if (nearDevices.isEmpty()) {
+            throw new RuntimeException("주변 디바이스를 찾을 수 없습니다.");
+        }
+            // Step 2: Find Vehicles with matching near_device_id
+            String vehicleQuery = "SELECT v FROM Vehicle v WHERE v.device.device_id IN :near_device_ids";
+            TypedQuery<Vehicle> vehicleTypedQuery = em.createQuery(vehicleQuery, Vehicle.class);
+            List<Long> nearDeviceIds = nearDevices.stream()
+                    .map(NearDevice::getNear_device_id)
+                    .collect(Collectors.toList());
+            vehicleTypedQuery.setParameter("near_device_ids", nearDeviceIds);
+            List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
 
-        // Step 3: Map Vehicle data to NearVehicle
-        List<NearVehicle> nearVehicles = new ArrayList<>();
-        for (Vehicle vehicle : vehicles) {
-            NearVehicle nearVehicle = new NearVehicle();
-            nearVehicle.setNear_vehicle_number(vehicle.getVehicle_number());
-            nearVehicle.setNear_vehicle_model(vehicle.getVehicle_model());
-            nearVehicle.setNear_vehicle_color(vehicle.getVehicle_color());
-            nearVehicle.setNear_vehicle_departuretime(vehicle.getVehicle_departuretime());
-            nearVehicle.setNo_departure(vehicle.getNo_departure());
-            nearVehicle.setNear_device(nearDevice);
-            nearVehicle.setDevice(vehicle.getDevice());
-            nearVehicles.add(nearVehicle);
+            // Step 3: Map Vehicle data to NearVehicle
+            List<NearVehicle> nearVehicles = new ArrayList<>();
+            for (Vehicle vehicle : vehicles) {
+                NearVehicle nearVehicle = new NearVehicle();
+                nearVehicle.setNear_vehicle_number(vehicle.getVehicle_number());
+                nearVehicle.setNear_vehicle_model(vehicle.getVehicle_model());
+                nearVehicle.setNear_vehicle_color(vehicle.getVehicle_color());
+                nearVehicle.setNear_vehicle_departuretime(vehicle.getVehicle_departuretime());
+                nearVehicle.setNo_departure(vehicle.getNo_departure());
+                nearVehicles.add(nearVehicle);
+            }
+
+            // Step 4: Return the result
+            return Optional.of(nearVehicles);
         }
 
-        // Step 4: Return the result
-        return Optional.of(nearVehicles);
-    }
 
     @Override
     public List<NearVehicle> findAll() {

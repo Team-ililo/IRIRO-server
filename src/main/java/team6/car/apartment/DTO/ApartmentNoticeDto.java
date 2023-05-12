@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApartmentNoticeDto {
-    private Long apartment_notice_id;
     private LocalDateTime apartment_notice_date;
     private String notice;
 }

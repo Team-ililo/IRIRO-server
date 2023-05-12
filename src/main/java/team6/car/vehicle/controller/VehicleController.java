@@ -13,6 +13,8 @@ import team6.car.vehicle.response.StatusEnum;
 import team6.car.vehicle.service.NearVehicleService;
 import team6.car.vehicle.service.VehicleService;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -167,8 +169,26 @@ public class VehicleController {
      * 주변 차량 정보 조회
      **/
     @GetMapping("/nearvehicles/{device_id}")
-    public ResponseEntity<List<NearVehicleDto>> getNearVehicles(@PathVariable("device_id") Long deviceId) {
-        List<NearVehicleDto> nearVehicles = nearVehicleService.getNearVehicle(deviceId);
-        return ResponseEntity.ok(nearVehicles);
+    public ResponseEntity<Message<List<NearVehicleDto>>> getNearVehicles(@PathVariable("device_id") Long deviceId) {
+        try {
+            List<NearVehicleDto> nearVehicles = nearVehicleService.getNearVehicle(deviceId);
+            Message<List<NearVehicleDto>> response = new Message<>();
+            response.setStatus(StatusEnum.OK);
+            response.setMessage("성공");
+            response.setData(nearVehicles);
+            return ResponseEntity.ok(response);
+        } catch (EntityNotFoundException e) {
+            Message<List<NearVehicleDto>> response = new Message<>();
+            response.setStatus(StatusEnum.NOT_FOUND);
+            response.setMessage("디바이스를 찾을 수 없습니다");
+            response.setData(Collections.emptyList());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        } catch (RuntimeException e) {
+            Message<List<NearVehicleDto>> response = new Message<>();
+            response.setStatus(StatusEnum.INTERNAL_SERVER_ERROR);
+            response.setMessage("내부 서버 오류");
+            response.setData(Collections.emptyList());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }

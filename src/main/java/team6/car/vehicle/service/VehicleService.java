@@ -10,6 +10,6 @@ import java.time.LocalDateTime;
 public interface VehicleService {
 
     ResponseEntity<Message> enrollDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking);
-    Vehicle modifyDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking);
+    ResponseEntity<Message> modifyDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking);
     VehicleDto getDeparturetime(Long id);
 }

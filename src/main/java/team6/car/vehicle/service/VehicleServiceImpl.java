@@ -52,11 +52,28 @@ public class VehicleServiceImpl implements VehicleService {
 
     /** 출차 시간 수정 **/
     @Override
-    public Vehicle modifyDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking){
+    public ResponseEntity<Message> modifyDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking){
         Vehicle vehicle=vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
         vehicle.setVehicle_departuretime(exitTime);
         vehicle.setNo_departure(isLongTermParking);
-        return vehicle;
+        String message;
+        StatusEnum status;
+
+        if (vehicle.getVehicle_departuretime() != null) {
+            message = "출차 시간 수정이 완료되었습니다.";
+            status = StatusEnum.OK;
+        } else {
+            message = "출차 시간 수정에 실패하였습니다.";
+            status = StatusEnum.INTERNAL_SERVER_ERROR;
+        }
+
+        // 응답 생성
+        Message responseMessage = new Message();
+        responseMessage.setStatus(status);
+        responseMessage.setMessage(message);
+        responseMessage.setData(null); // 데이터 필요 시 해당 필드에 데이터 객체를 설정
+
+        return ResponseEntity.status(status.getStatusCode()).body(responseMessage);
     }
 
     /** 출차 시간 조회 **/

@@ -13,6 +13,7 @@ import team6.car.vehicle.service.NearVehicleService;
 import team6.car.vehicle.service.VehicleService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,9 +24,11 @@ public class VehicleController {
     private final NearVehicleService nearVehicleService;
 
 
-    /** 출차 정보 등록 **/
+    /**
+     * 출차 정보 등록
+     **/
     @PostMapping("/vehicle/departuretime/{id}")
-    public ResponseEntity<Message> enrollDeparturetime(@PathVariable Long id, @RequestBody VehicleDto vehicleDto){
+    public ResponseEntity<Message> enrollDeparturetime(@PathVariable Long id, @RequestBody VehicleDto vehicleDto) {
         ResponseEntity<Message> response;
 
         try {
@@ -54,11 +57,55 @@ public class VehicleController {
         return response;
     }
 
-    /** 출차 정보 수정 **/
+    /**
+     * 출차 정보 수정
+     **/
     @PutMapping("/vehicle/departuretime/{id}")
-    public ResponseEntity<Vehicle> modifyDeparturetime(@PathVariable Long id, @RequestBody VehicleDto vehicleDto) {
-        Vehicle vehicle = vehicleService.modifyDeparturetime(id, vehicleDto.getExitTime(), vehicleDto.isLongTermParking());
-        return ResponseEntity.ok(vehicle);
+    public ResponseEntity<Message> modifyDeparturetime(@PathVariable Long id, @RequestBody VehicleDto vehicleDto) {
+        ResponseEntity<Message> response;
+
+        try {
+            // 출차 정보 수정
+            vehicleService.modifyDeparturetime(id, vehicleDto.getExitTime(), vehicleDto.isLongTermParking());
+
+            // 출차 정보 수정 성공 응답 생성
+            String message = "출차 시간 수정이 완료되었습니다.";
+            StatusEnum status = StatusEnum.OK;
+            Message responseMessage = new Message();
+            responseMessage.setStatus(status);
+            responseMessage.setMessage(message);
+            responseMessage.setData(null);
+            response = ResponseEntity.ok(responseMessage);
+        } catch (IllegalArgumentException e) {
+            // 잘못된 요청인 경우 (BAD_REQUEST)
+            String message = "잘못된 요청입니다.";
+            StatusEnum status = StatusEnum.BAD_REQUEST;
+            Message responseMessage = new Message();
+            responseMessage.setStatus(status);
+            responseMessage.setMessage(message);
+            responseMessage.setData(null);
+            response = ResponseEntity.status(status.getStatusCode()).body(responseMessage);
+        } catch (NoSuchElementException e) {
+            // 차량 정보를 찾을 수 없는 경우 (NOT_FOUND)
+            String message = "차량 정보를 찾을 수 없습니다.";
+            StatusEnum status = StatusEnum.NOT_FOUND;
+            Message responseMessage = new Message();
+            responseMessage.setStatus(status);
+            responseMessage.setMessage(message);
+            responseMessage.setData(null);
+            response = ResponseEntity.status(status.getStatusCode()).body(responseMessage);
+        } catch (Exception e) {
+            // 내부 서버 오류인 경우 (INTERNAL_SERVER_ERROR)
+            String message = "내부 서버 오류가 발생하였습니다.";
+            StatusEnum status = StatusEnum.INTERNAL_SERVER_ERROR;
+            Message responseMessage = new Message();
+            responseMessage.setStatus(status);
+            responseMessage.setMessage(message);
+            responseMessage.setData(null);
+            response = ResponseEntity.status(status.getStatusCode()).body(responseMessage);
+        }
+
+        return response;
     }
 
     /** 출차 정보 조회 **/

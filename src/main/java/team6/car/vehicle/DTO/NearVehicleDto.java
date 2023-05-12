@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class NearVehicleDto {
-    private Long id;
     private String vehicle_number;
     private String model;
     private String color;

@@ -18,7 +18,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import team6.car.member.response.StatusEnum;
+import team6.car.vehicle.response.Message;
 @Service
 @Transactional
 @RequiredArgsConstructor

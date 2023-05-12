@@ -24,7 +24,6 @@ public class ApartmentNoticeServiceImpl implements ApartmentNoticeService{
                 .orElseThrow(() -> new RuntimeException("아파트 정보를 찾을 수 없습니다."));
 
         return ApartmentNoticeDto.builder()
-                .apartment_notice_id(apartmentNotice.getApartment_notice_id())
                 .apartment_notice_date(apartmentNotice.getApartment_notice_date())
                 .notice(apartmentNotice.getApartment_notice())
                 .build();

@@ -1,10 +1,10 @@
 package team6.car.vehicle.response;
 
-public class Message {
+public class Message<T> {
 
     private StatusEnum status;
     private String message;
-    private Object data;
+    private T data;
 
     public Message() {
         this.status = StatusEnum.BAD_REQUEST;
@@ -28,11 +28,11 @@ public class Message {
         return message;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 }

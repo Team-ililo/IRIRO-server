@@ -118,7 +118,9 @@ public class VehicleController {
         return response;
     }
 
-    /** 출차 정보 조회 **/
+    /**
+     * 출차 정보 조회
+     **/
     @GetMapping("/vehicleDto/departuretime/{id}")
     public ResponseEntity<Message> getDeparturetime(@PathVariable Long id) {
         Message responseMessage;
@@ -161,7 +163,9 @@ public class VehicleController {
         return ResponseEntity.status(httpStatus).body(responseMessage);
     }
 
-    /** 주변 차량 정보 조회 **/
+    /**
+     * 주변 차량 정보 조회
+     **/
     @GetMapping("/nearvehicles/{device_id}")
     public ResponseEntity<List<NearVehicleDto>> getNearVehicles(@PathVariable("device_id") Long deviceId) {
         List<NearVehicleDto> nearVehicles = nearVehicleService.getNearVehicle(deviceId);

@@ -12,7 +12,17 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	bootJar {
+		jar.enabled = true // 빌드시 jar 을 실행
+	}
+
+	jar {
+		manifest { // 빌드시 Main-Class 설정
+			attributes 'Main-Class': 'team6.car.CarApplication'
+		}
+	}
 }
+
 
 repositories {
 	mavenCentral()
@@ -27,7 +37,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'mysql:mysql-connector-java'
-	runtimeOnly 'com.mysql:mysql-connector-java'
+	//runtimeOnly 'com.mysql:mysql-connector-java'
 	//runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

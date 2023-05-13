@@ -63,6 +63,23 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
+    public Optional<Vehicle> findByVehicleNumber(String vehicle_number) {
+        List<Vehicle> result = em.createQuery("select m from Vehicle_info m where m.vehicle_number = :vehicle_number",Vehicle.class)
+                .setParameter("vehicle_number", vehicle_number)
+                .getResultList();
+        return result.stream().findAny();
+    }
+
+    @Override
+    public Optional<Vehicle> findByMemberId(Long member_id) {
+        // PK 즉 필수 키가 아니면 중복과 부재의 문제가 있으므로 쿼리를 작성해야함
+        List<Vehicle> result = em.createQuery("select m from Vehicle_info m where m.member.member_id = :member_id",Vehicle.class)
+                .setParameter("member_id", member_id)
+                .getResultList();
+        return result.stream().findAny();
+    }
+
+    @Override
     public List<Vehicle> findAll() {
         return em.createQuery("SELECT v FROM Vehicle v", Vehicle.class)
                 .getResultList();

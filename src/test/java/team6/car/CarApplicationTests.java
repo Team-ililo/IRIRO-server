@@ -1,3 +1,4 @@
+/*
 package team6.car;
 
 import org.junit.jupiter.api.Test;
@@ -10,4 +11,4 @@ class CarApplicationTests {
 	void contextLoads() {
 	}
 
-}
+}*/

@@ -84,7 +84,6 @@ public class VehicleServiceImpl implements VehicleService {
         Member member = vehicle.getMember();
         String address = member.getAddress();
         return VehicleDto.builder()
-                .id(vehicle.getVehicle_id())
                 .vehicle_number(vehicle.getVehicle_number())
                 .model(vehicle.getVehicle_model())
                 .color(vehicle.getVehicle_color())

@@ -10,7 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApartmentDto {
-    private Long apartment_id;
     private String name;
 
 }

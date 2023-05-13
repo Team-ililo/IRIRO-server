@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class VehicleDto {
-    private Long id;
     private String vehicle_number;
     private String model;
     private String color;
@@ -21,8 +20,7 @@ public class VehicleDto {
     public VehicleDto() {
         // 기본 생성자
     }
-    public VehicleDto(Long id, String vehicle_number, String model, String color, LocalDateTime exitTime, boolean isLongTermParking, String address) {
-        this.id = id;
+    public VehicleDto(String vehicle_number, String model, String color, LocalDateTime exitTime, boolean isLongTermParking, String address) {
         this.vehicle_number = vehicle_number;
         this.model = model;
         this.color = color;

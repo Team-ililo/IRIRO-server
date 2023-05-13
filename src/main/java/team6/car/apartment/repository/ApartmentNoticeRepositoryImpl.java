@@ -37,17 +37,12 @@ public class ApartmentNoticeRepositoryImpl implements ApartmentNoticeRepository{
     }
 
     @Override
-    public Optional<ApartmentNotice> findByApartmentId(Long apartment_id) {
+    public List<ApartmentNotice> findByApartmentId(Long apartment_id) {
         String query = "SELECT an FROM ApartmentNotice an WHERE an.apartment.apartment_id = :apartment_id";
         TypedQuery<ApartmentNotice> typedQuery = em.createQuery(query, ApartmentNotice.class);
         typedQuery.setParameter("apartment_id", apartment_id);
 
-        try {
-            ApartmentNotice apartmentNotice = typedQuery.getSingleResult();
-            return Optional.ofNullable(apartmentNotice);
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return typedQuery.getResultList();
     }
 
     @Override

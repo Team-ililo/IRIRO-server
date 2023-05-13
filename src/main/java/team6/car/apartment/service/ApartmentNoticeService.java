@@ -3,9 +3,10 @@ package team6.car.apartment.service;
 import team6.car.apartment.DTO.ApartmentNoticeDto;
 import team6.car.apartment.domain.ApartmentNotice;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ApartmentNoticeService {
-    ApartmentNoticeDto getApartmentNotice(Long id);
-    Optional<ApartmentNotice> findByApartmentId(Long apartmentId);
+    List<ApartmentNoticeDto> getApartmentNotice(Long id);
+    List<ApartmentNotice> findByApartmentId(Long apartmentId);
 }

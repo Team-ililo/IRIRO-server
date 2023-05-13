@@ -45,6 +45,11 @@ public class ApartmentController {
             message = "아파트 공지사항 조회에 실패하였습니다.";
         }
 
+        if (apartmentNoticeDtos == null || apartmentNoticeDtos.isEmpty()) {
+            status = StatusEnum.NOT_FOUND;
+            message = "해당 아파트에 대한 공지사항이 없습니다.";
+        }
+
         Message<List<ApartmentNoticeDto>> responseMessage = new Message<>();
         responseMessage.setStatus(status);
         responseMessage.setMessage(message);

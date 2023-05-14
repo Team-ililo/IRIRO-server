@@ -1,6 +1,7 @@
 package team6.car.vehicle.domain;
 
 import lombok.*;
+import org.springframework.lang.Nullable;
 import team6.car.device.domain.Device;
 import team6.car.member.domain.Member;
 
@@ -24,6 +25,7 @@ public class Vehicle {
     private String vehicle_model;
     @Column(name="vehicle_color")
     private String vehicle_color;
+    @Nullable
     @Column(name="vehicle_departuretime")
     private LocalDateTime vehicle_departuretime;
     @Column(name="no_departure")

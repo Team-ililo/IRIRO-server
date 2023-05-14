@@ -53,11 +53,10 @@ public class NearVehicleServiceImpl implements NearVehicleService {
                 .orElse(null); // null로 초기화
 
         return nearVehicles.stream()
-                .filter(Objects::nonNull) // null 값 필터링
                 .map(nearVehicle -> {
                     LocalTime nearVehicleDepartureTime = nearVehicle.getNear_vehicle_departuretime();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-                    String formattedExitTime = nearVehicleDepartureTime.format(formatter);
+                    String formattedExitTime = nearVehicleDepartureTime != null ? nearVehicleDepartureTime.format(formatter) : null;
 
                     boolean isSatisfied;
                     if (myDepartureTime == null || nearVehicleDepartureTime == null) {

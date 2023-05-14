@@ -79,30 +79,30 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
         if (nearDevices.isEmpty()) {
             throw new RuntimeException("주변 디바이스를 찾을 수 없습니다.");
         }
-            // Step 2: Find Vehicles with matching near_device_id
-            String vehicleQuery = "SELECT v FROM Vehicle v WHERE v.device.device_id IN :near_device_ids";
-            TypedQuery<Vehicle> vehicleTypedQuery = em.createQuery(vehicleQuery, Vehicle.class);
-            List<Long> nearDeviceIds = nearDevices.stream()
-                    .map(NearDevice::getNear_device_id)
-                    .collect(Collectors.toList());
-            vehicleTypedQuery.setParameter("near_device_ids", nearDeviceIds);
-            List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
+        // Step 2: Find Vehicles with matching near_device_id
+        String vehicleQuery = "SELECT v FROM Vehicle v WHERE v.device.device_id IN :near_device_ids";
+        TypedQuery<Vehicle> vehicleTypedQuery = em.createQuery(vehicleQuery, Vehicle.class);
+        List<Long> nearDeviceIds = nearDevices.stream()
+                .map(NearDevice::getNear_device_id)
+                .collect(Collectors.toList());
+        vehicleTypedQuery.setParameter("near_device_ids", nearDeviceIds);
+        List<Vehicle> vehicles = vehicleTypedQuery.getResultList();
 
-            // Step 3: Map Vehicle data to NearVehicle
-            List<NearVehicle> nearVehicles = new ArrayList<>();
-            for (Vehicle vehicle : vehicles) {
-                NearVehicle nearVehicle = new NearVehicle();
-                nearVehicle.setNear_vehicle_number(vehicle.getVehicle_number());
-                nearVehicle.setNear_vehicle_model(vehicle.getVehicle_model());
-                nearVehicle.setNear_vehicle_color(vehicle.getVehicle_color());
-                nearVehicle.setNear_vehicle_departuretime(vehicle.getVehicle_departuretime());
-                nearVehicle.setNo_departure(vehicle.getNo_departure());
-                nearVehicles.add(nearVehicle);
-            }
-
-            // Step 4: Return the result
-            return Optional.of(nearVehicles);
+        // Step 3: Map Vehicle data to NearVehicle
+        List<NearVehicle> nearVehicles = new ArrayList<>();
+        for (Vehicle vehicle : vehicles) {
+            NearVehicle nearVehicle = new NearVehicle();
+            nearVehicle.setNear_vehicle_number(vehicle.getVehicle_number());
+            nearVehicle.setNear_vehicle_model(vehicle.getVehicle_model());
+            nearVehicle.setNear_vehicle_color(vehicle.getVehicle_color());
+            nearVehicle.setNear_vehicle_departuretime(vehicle.getVehicle_departuretime());
+            nearVehicle.setNo_departure(vehicle.getNo_departure());
+            nearVehicles.add(nearVehicle);
         }
+
+        // Step 4: Return the result
+        return Optional.of(nearVehicles);
+    }
 
 
     @Override

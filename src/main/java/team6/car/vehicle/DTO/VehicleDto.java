@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.lang.Nullable;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -14,15 +15,14 @@ public class VehicleDto {
     private String vehicle_number;
     private String model;
     private String color;
-
-    private LocalDateTime exitTime;
+    private LocalTime exitTime;
     private boolean isLongTermParking;
     private String address;
 
     public VehicleDto() {
         // 기본 생성자
     }
-    public VehicleDto(String vehicle_number, String model, String color, LocalDateTime exitTime, boolean isLongTermParking, String address) {
+    public VehicleDto(String vehicle_number, String model, String color, LocalTime exitTime, boolean isLongTermParking, String address) {
         this.vehicle_number = vehicle_number;
         this.model = model;
         this.color = color;

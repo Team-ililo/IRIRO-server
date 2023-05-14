@@ -5,10 +5,11 @@ import team6.car.vehicle.DTO.VehicleDto;
 import team6.car.vehicle.response.Message;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public interface VehicleService {
 
-    ResponseEntity<Message> enrollDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking);
-    ResponseEntity<Message> modifyDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking);
+    ResponseEntity<Message> enrollDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking);
+    ResponseEntity<Message> modifyDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking);
     VehicleDto getDeparturetime(Long id);
 }

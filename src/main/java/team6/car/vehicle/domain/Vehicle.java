@@ -7,6 +7,7 @@ import team6.car.member.domain.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Builder
 @Getter
@@ -27,7 +28,7 @@ public class Vehicle {
     private String vehicle_color;
 
     @Column(name="vehicle_departuretime")
-    private LocalDateTime vehicle_departuretime;
+    private LocalTime vehicle_departuretime;
     @Column(name="no_departure")
     private Boolean No_departure;
     @ManyToOne(fetch = FetchType.LAZY)

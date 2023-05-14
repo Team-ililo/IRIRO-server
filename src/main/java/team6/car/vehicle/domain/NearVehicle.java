@@ -8,6 +8,7 @@ import team6.car.device.domain.NearDevice;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Builder
 @Getter
@@ -28,7 +29,7 @@ public class NearVehicle {
     @Column(name="near_vehicle_color")
     private String near_vehicle_color;
     @Column(name="near_vehicle_departuretime")
-    private LocalDateTime near_vehicle_departuretime;
+    private LocalTime near_vehicle_departuretime;
     @Column(name="no_departure")
     private Boolean No_departure;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -55,7 +56,7 @@ public class NearVehicle {
         return near_vehicle_color;
     }
 
-    public LocalDateTime getNear_vehicle_departuretime() {
+    public LocalTime getNear_vehicle_departuretime() {
         return near_vehicle_departuretime;
     }
 

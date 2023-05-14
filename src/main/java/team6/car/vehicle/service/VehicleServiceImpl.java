@@ -12,6 +12,7 @@ import team6.car.vehicle.response.StatusEnum;
 import team6.car.vehicle.response.Message;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 @Transactional
@@ -22,7 +23,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /** 출차 시간 등록 **/
     @Override
-    public ResponseEntity<Message> enrollDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking){
+    public ResponseEntity<Message> enrollDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking){
         Vehicle vehicle= vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
         VehicleDto vehicleDto=VehicleDto.builder()
                 .exitTime(exitTime)
@@ -52,7 +53,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /** 출차 시간 수정 **/
     @Override
-    public ResponseEntity<Message> modifyDeparturetime(Long id, LocalDateTime exitTime, Boolean isLongTermParking){
+    public ResponseEntity<Message> modifyDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking){
         Vehicle vehicle=vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
         vehicle.setVehicle_departuretime(exitTime);
         vehicle.setNo_departure(isLongTermParking);

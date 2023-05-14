@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import team6.car.vehicle.DTO.MainPageInfoDto;
 import team6.car.vehicle.DTO.NearVehicleDto;
 import team6.car.vehicle.DTO.VehicleDto;
 import team6.car.vehicle.domain.Vehicle;
@@ -121,28 +122,29 @@ public class VehicleController {
     }
 
     /**
-     * 출차 정보 조회
+     * 출차 정보 조회(메인페이지)
      **/
-    @GetMapping("/vehicleDto/departuretime/{id}")
-    public ResponseEntity<Message> getDeparturetime(@PathVariable Long id) {
+    @GetMapping("/vehicle/departuretime/{id}")
+    public ResponseEntity<Message> getMainPageInfo(@PathVariable Long id) {
         Message responseMessage;
         HttpStatus httpStatus;
 
         try {
             // 출차 정보 조회
-            VehicleDto vehicleDto = vehicleService.getDeparturetime(id);
+            MainPageInfoDto mainPageInfo = vehicleService.getMainPageInfo(id);
 
-            if (vehicleDto != null) {
-                // 출차 정보가 있는 경우 성공 응답 생성
+            if ((mainPageInfo.getExitTime() != null) || (mainPageInfo.getExitTime() == null && mainPageInfo.isLongTermParking())) {
+            // exitTime이 존재하거나 isLongTermParking=True 일 때
                 String message = "출차 정보 조회가 완료되었습니다.";
                 StatusEnum status = StatusEnum.OK;
                 responseMessage = new Message();
                 responseMessage.setStatus(status);
                 responseMessage.setMessage(message);
-                responseMessage.setData(vehicleDto);
+                responseMessage.setData(mainPageInfo);
+
                 httpStatus = HttpStatus.OK;
             } else {
-                // 출차 정보가 없는 경우 NotFound 응답 생성
+                // 출차 정보가 없고 isLongTermParking=False 이면 NotFound 응답 생성
                 String message = "출차 정보가 존재하지 않습니다.";
                 StatusEnum status = StatusEnum.NOT_FOUND;
                 responseMessage = new Message();

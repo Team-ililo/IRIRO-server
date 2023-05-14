@@ -4,13 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team6.car.apartment.domain.Apartment;
 import team6.car.member.domain.Member;
+import team6.car.vehicle.DTO.MainPageInfoDto;
 import team6.car.vehicle.DTO.VehicleDto;
 import team6.car.vehicle.domain.Vehicle;
 import team6.car.vehicle.repository.VehicleRepository;
 import team6.car.vehicle.response.StatusEnum;
 import team6.car.vehicle.response.Message;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
@@ -76,20 +79,25 @@ public class VehicleServiceImpl implements VehicleService {
         return ResponseEntity.status(status.getStatusCode()).body(responseMessage);
     }
 
-    /** 출차 시간 조회 **/
+    /** 출차 시간 조회 (메인페이지)**/
     @Override
-    public VehicleDto getDeparturetime(Long id){
+    public MainPageInfoDto getMainPageInfo(Long id){
         Vehicle vehicle = vehicleRepository.findByIdWithMember(id)
                 .orElseThrow(() -> new RuntimeException("차량 정보를 찾을 수 없습니다."));
         Member member = vehicle.getMember();
         String address = member.getAddress();
-        return VehicleDto.builder()
-                .vehicle_number(vehicle.getVehicle_number())
-                .model(vehicle.getVehicle_model())
-                .color(vehicle.getVehicle_color())
-                .exitTime(vehicle.getVehicle_departuretime())
+        String apartment =member.getApartment().getApartment_name();
+
+        LocalDateTime exitTime=vehicle.getVehicle_departuretime();
+        LocalDateTime currentTime=LocalDateTime.now();
+        Duration remainintTime=Duration.between(currentTime,exitTime);
+
+        return MainPageInfoDto.builder()
+                .exitTime(exitTime)
+                .remainingTime(remainintTime)
                 .isLongTermParking(vehicle.getNo_departure())
                 .address(address)
+                .apartment(apartment)
                 .build();
     }
 }

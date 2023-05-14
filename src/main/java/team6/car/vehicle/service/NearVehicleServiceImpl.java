@@ -63,7 +63,7 @@ public class NearVehicleServiceImpl implements NearVehicleService {
                             .color(nearVehicle.getNear_vehicle_color())
                             .exitTime(formattedExitTime)
                             .isLongTermParking(nearVehicle.getNo_departure())
-                            .isSatisfied(myDepartureTime.isBefore(nearVehicle.getNear_vehicle_departuretime()));
+                            .isSatisfied(nearVehicle.getNo_departure() ||myDepartureTime.isBefore(nearVehicle.getNear_vehicle_departuretime()));
 
                     return builder.build();
                 })

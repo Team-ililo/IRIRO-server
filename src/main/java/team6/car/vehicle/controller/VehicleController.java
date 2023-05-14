@@ -173,15 +173,24 @@ public class VehicleController {
     public ResponseEntity<Message<List<NearVehicleDto>>> getNearVehicles(@PathVariable("device_id") Long deviceId) {
         try {
             List<NearVehicleDto> nearVehicles = nearVehicleService.getNearVehicle(deviceId);
-            Message<List<NearVehicleDto>> response = new Message<>();
-            response.setStatus(StatusEnum.OK);
-            response.setMessage("성공");
-            response.setData(nearVehicles);
-            return ResponseEntity.ok(response);
+
+            if (!nearVehicles.isEmpty()) {
+                Message<List<NearVehicleDto>> response = new Message<>();
+                response.setStatus(StatusEnum.OK);
+                response.setMessage("성공");
+                response.setData(nearVehicles);
+                return ResponseEntity.ok(response);
+            } else {
+                Message<List<NearVehicleDto>> response = new Message<>();
+                response.setStatus(StatusEnum.NOT_FOUND);
+                response.setMessage("주변 차량이 없습니다.");
+                response.setData(Collections.emptyList());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
         } catch (EntityNotFoundException e) {
             Message<List<NearVehicleDto>> response = new Message<>();
             response.setStatus(StatusEnum.NOT_FOUND);
-            response.setMessage("디바이스를 찾을 수 없습니다");
+            response.setMessage("디바이스를 찾을 수 없습니다.");
             response.setData(Collections.emptyList());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (RuntimeException e) {

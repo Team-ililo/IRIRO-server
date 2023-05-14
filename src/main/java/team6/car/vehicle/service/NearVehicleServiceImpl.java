@@ -19,6 +19,7 @@ import team6.car.vehicle.response.StatusEnum;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -51,11 +52,16 @@ public class NearVehicleServiceImpl implements NearVehicleService {
 
         return nearVehicles.stream()
                 .map(nearVehicle -> {
+                    LocalTime nearVehicleDepartureTime = nearVehicle.getNear_vehicle_departuretime();
+
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                    String formattedExitTime = nearVehicleDepartureTime.format(formatter);
+
                     NearVehicleDto.NearVehicleDtoBuilder builder = NearVehicleDto.builder()
                             .vehicle_number(nearVehicle.getNear_vehicle_number())
                             .model(nearVehicle.getNear_vehicle_model())
                             .color(nearVehicle.getNear_vehicle_color())
-                            .exitTime(nearVehicle.getNear_vehicle_departuretime())
+                            .exitTime(formattedExitTime)
                             .isLongTermParking(nearVehicle.getNo_departure())
                             .isSatisfied(myDepartureTime.isBefore(nearVehicle.getNear_vehicle_departuretime()));
 

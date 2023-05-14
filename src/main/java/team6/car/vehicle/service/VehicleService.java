@@ -7,6 +7,7 @@ import team6.car.vehicle.domain.Vehicle;
 import team6.car.vehicle.response.Message;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public interface VehicleService {
 

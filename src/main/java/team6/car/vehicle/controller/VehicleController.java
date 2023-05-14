@@ -133,8 +133,8 @@ public class VehicleController {
             // 출차 정보 조회
             MainPageInfoDto mainPageInfo = vehicleService.getMainPageInfo(id);
 
-            if ((mainPageInfo.getExitTime() != null) || (mainPageInfo.getExitTime() == null && mainPageInfo.isLongTermParking())) {
-            // exitTime이 존재하거나 isLongTermParking=True 일 때
+            if (mainPageInfo!=null) {
+            // 출차 정보 존재
                 String message = "출차 정보 조회가 완료되었습니다.";
                 StatusEnum status = StatusEnum.OK;
                 responseMessage = new Message();
@@ -144,7 +144,7 @@ public class VehicleController {
 
                 httpStatus = HttpStatus.OK;
             } else {
-                // 출차 정보가 없고 isLongTermParking=False 이면 NotFound 응답 생성
+
                 String message = "출차 정보가 존재하지 않습니다.";
                 StatusEnum status = StatusEnum.NOT_FOUND;
                 responseMessage = new Message();

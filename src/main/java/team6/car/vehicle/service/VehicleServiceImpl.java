@@ -15,6 +15,7 @@ import team6.car.vehicle.response.Message;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @Transactional
@@ -90,14 +91,21 @@ public class VehicleServiceImpl implements VehicleService {
 
         LocalDateTime exitTime=vehicle.getVehicle_departuretime();
         LocalDateTime currentTime=LocalDateTime.now();
-        Duration remainintTime=Duration.between(currentTime,exitTime);
+        Duration remainingDuration=Duration.between(currentTime,exitTime);
+        long remainingHours = remainingDuration.toHours();
+        long remainingMinutes = remainingDuration.toMinutesPart();
 
-        return MainPageInfoDto.builder()
-                .exitTime(exitTime)
-                .remainingTime(remainintTime)
+        String formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+        String formattedRemainingTime = String.format("%02d:%02d", remainingHours, remainingMinutes);
+
+        MainPageInfoDto mainPageInfoDto = MainPageInfoDto.builder()
                 .isLongTermParking(vehicle.getNo_departure())
                 .address(address)
                 .apartment(apartment)
+                .formattedExitTime(formattedExitTime)
+                .formattedRemainingTime(formattedRemainingTime)
                 .build();
+
+        return mainPageInfoDto;
     }
 }

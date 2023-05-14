@@ -6,26 +6,26 @@ import lombok.Setter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
 @Builder
 public class MainPageInfoDto {
 
-    private LocalDateTime exitTime;
-    private Duration remainingTime;
     private boolean isLongTermParking;
     private String address;
     private String apartment;
+    public String formattedExitTime;
+    private String formattedRemainingTime;
     public MainPageInfoDto() {
         // 기본 생성자
     }
-    public MainPageInfoDto(LocalDateTime exitTime,Duration remainingTime, boolean isLongTermParking, String address, String apartment) {
-        this.exitTime = exitTime;
-        this.remainingTime=remainingTime;
+    public MainPageInfoDto(boolean isLongTermParking, String address, String apartment, String formattedExitTime, String formattedRemainingTime) {
         this.isLongTermParking = isLongTermParking;
         this.address = address;
         this.apartment=apartment;
+        this.formattedExitTime = formattedExitTime;
+        this.formattedRemainingTime = formattedRemainingTime;
     }
-
 }

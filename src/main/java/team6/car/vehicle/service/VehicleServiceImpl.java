@@ -5,14 +5,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team6.car.member.domain.Member;
+import team6.car.vehicle.DTO.MainPageDto;
 import team6.car.vehicle.DTO.VehicleDto;
 import team6.car.vehicle.domain.Vehicle;
 import team6.car.vehicle.repository.VehicleRepository;
 import team6.car.vehicle.response.StatusEnum;
 import team6.car.vehicle.response.Message;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @Transactional
@@ -79,18 +83,30 @@ public class VehicleServiceImpl implements VehicleService {
 
     /** 출차 시간 조회 **/
     @Override
-    public VehicleDto getDeparturetime(Long id){
+    public MainPageDto getDeparturetime(Long id) {
         Vehicle vehicle = vehicleRepository.findByIdWithMember(id)
                 .orElseThrow(() -> new RuntimeException("차량 정보를 찾을 수 없습니다."));
         Member member = vehicle.getMember();
         String address = member.getAddress();
-        return VehicleDto.builder()
-                .vehicle_number(vehicle.getVehicle_number())
-                .model(vehicle.getVehicle_model())
-                .color(vehicle.getVehicle_color())
-                .exitTime(vehicle.getVehicle_departuretime())
-                .isLongTermParking(vehicle.getNo_departure())
+        LocalTime exitTime = vehicle.getVehicle_departuretime();
+        String formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+
+        LocalTime currentTime = LocalTime.now();
+        Duration duration = Duration.between(currentTime, exitTime);
+        long remainingMinutes = duration.toMinutes();
+
+        boolean isLongTermParking = vehicle.getNo_departure();
+
+        return MainPageDto.builder()
+                .formattedExitTime(formattedExitTime)
+                .remainingTime(formatRemainingTime(remainingMinutes))
+                .isLongTermParking(isLongTermParking)
                 .address(address)
                 .build();
+    }
+    private String formatRemainingTime(long minutes) {
+        long hours = minutes / 60;
+        long remainingMinutes = minutes % 60;
+        return String.format("%02d:%02d", hours, remainingMinutes);
     }
 }

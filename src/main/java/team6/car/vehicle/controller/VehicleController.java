@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import team6.car.vehicle.DTO.MainPageDto;
 import team6.car.vehicle.DTO.NearVehicleDto;
 import team6.car.vehicle.DTO.VehicleDto;
 import team6.car.vehicle.response.Message;
@@ -129,16 +130,16 @@ public class VehicleController {
 
         try {
             // 출차 정보 조회
-            VehicleDto vehicleDto = vehicleService.getDeparturetime(id);
+            MainPageDto mainPageDto = vehicleService.getDeparturetime(id);
 
-            if (vehicleDto!=null) {
+            if (mainPageDto!=null) {
             // 출차 정보 존재
                 String message = "출차 정보 조회가 완료되었습니다.";
                 StatusEnum status = StatusEnum.OK;
                 responseMessage = new Message();
                 responseMessage.setStatus(status);
                 responseMessage.setMessage(message);
-                responseMessage.setData(vehicleDto);
+                responseMessage.setData(mainPageDto);
 
                 httpStatus = HttpStatus.OK;
             } else {

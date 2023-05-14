@@ -18,6 +18,7 @@ import team6.car.vehicle.response.StatusEnum;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,7 +45,7 @@ public class NearVehicleServiceImpl implements NearVehicleService {
         List<NearVehicle> nearVehicles = nearVehicleRepository.findByDeviceId(device_id)
                 .orElseThrow(() -> new EntityNotFoundException("Near Vehicles not found"));
 
-        LocalDateTime myDepartureTime = vehicleRepository.findByDeviceId(device_id)
+        LocalTime myDepartureTime = vehicleRepository.findByDeviceId(device_id)
                 .map(Vehicle::getVehicle_departuretime)
                 .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
 
@@ -57,10 +58,6 @@ public class NearVehicleServiceImpl implements NearVehicleService {
                             .exitTime(nearVehicle.getNear_vehicle_departuretime())
                             .isLongTermParking(nearVehicle.getNo_departure())
                             .isSatisfied(myDepartureTime.isBefore(nearVehicle.getNear_vehicle_departuretime()));
-
-                    // Add your logic here to populate additional fields in the builder if needed
-                    // For example:
-                    // builder.additionalField(nearVehicle.getAdditionalField());
 
                     return builder.build();
                 })

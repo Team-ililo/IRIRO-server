@@ -27,7 +27,6 @@ public class NearVehicle {
     private String near_vehicle_model;
     @Column(name="near_vehicle_color")
     private String near_vehicle_color;
-    @Nullable
     @Column(name="near_vehicle_departuretime")
     private LocalDateTime near_vehicle_departuretime;
     @Column(name="no_departure")

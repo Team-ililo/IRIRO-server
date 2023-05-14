@@ -2,6 +2,7 @@ package team6.car.vehicle.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.lang.Nullable;
 import team6.car.device.domain.Device;
 import team6.car.device.domain.NearDevice;
 
@@ -26,6 +27,7 @@ public class NearVehicle {
     private String near_vehicle_model;
     @Column(name="near_vehicle_color")
     private String near_vehicle_color;
+    @Nullable
     @Column(name="near_vehicle_departuretime")
     private LocalDateTime near_vehicle_departuretime;
     @Column(name="no_departure")

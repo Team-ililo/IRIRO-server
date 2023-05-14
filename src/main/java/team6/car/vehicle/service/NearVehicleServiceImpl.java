@@ -20,7 +20,9 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,14 +50,26 @@ public class NearVehicleServiceImpl implements NearVehicleService {
 
         LocalTime myDepartureTime = vehicleRepository.findByDeviceId(device_id)
                 .map(Vehicle::getVehicle_departuretime)
-                .orElseThrow(() -> new EntityNotFoundException("Vehicle not found"));
+                .orElse(null); // null로 초기화
 
         return nearVehicles.stream()
+                .filter(Objects::nonNull) // null 값 필터링
                 .map(nearVehicle -> {
                     LocalTime nearVehicleDepartureTime = nearVehicle.getNear_vehicle_departuretime();
-
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
                     String formattedExitTime = nearVehicleDepartureTime.format(formatter);
+
+                    boolean isSatisfied;
+                    if (myDepartureTime == null || nearVehicleDepartureTime == null) {
+                        isSatisfied = true;
+                    } else {
+                        isSatisfied = myDepartureTime.isBefore(nearVehicleDepartureTime);
+                    }
+
+                    // isLongTermParking이 true이면 satisfied를 true로 설정
+                    if (nearVehicle.getNo_departure()) {
+                        isSatisfied = true;
+                    }
 
                     NearVehicleDto.NearVehicleDtoBuilder builder = NearVehicleDto.builder()
                             .vehicle_number(nearVehicle.getNear_vehicle_number())
@@ -63,7 +77,7 @@ public class NearVehicleServiceImpl implements NearVehicleService {
                             .color(nearVehicle.getNear_vehicle_color())
                             .exitTime(formattedExitTime)
                             .isLongTermParking(nearVehicle.getNo_departure())
-                            .isSatisfied(nearVehicle.getNo_departure() ||myDepartureTime.isBefore(nearVehicle.getNear_vehicle_departuretime()));
+                            .isSatisfied(isSatisfied);
 
                     return builder.build();
                 })

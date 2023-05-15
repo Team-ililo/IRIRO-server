@@ -12,6 +12,7 @@ public class MainPageDto {
     private String formattedExitTime;
     private String remainingTime;
     private boolean isLongTermParking;
+    private String apartmentName;
     private String address;
 
 }

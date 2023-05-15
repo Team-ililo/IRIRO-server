@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import team6.car.apartment.domain.Apartment;
 import team6.car.member.domain.Member;
 import team6.car.vehicle.DTO.MainPageDto;
 import team6.car.vehicle.DTO.VehicleDto;
@@ -87,6 +88,17 @@ public class VehicleServiceImpl implements VehicleService {
         Vehicle vehicle = vehicleRepository.findByIdWithMember(id)
                 .orElseThrow(() -> new RuntimeException("차량 정보를 찾을 수 없습니다."));
         Member member = vehicle.getMember();
+
+        Apartment apartment = null;
+        String apartmentName = null;
+
+        if (member != null) {
+            apartment = member.getApartment();
+            if (apartment != null) {
+                apartmentName = apartment.getApartment_name();
+            }
+        }
+
         String address = member.getAddress();
         LocalTime exitTime = vehicle.getVehicle_departuretime();
         String formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
@@ -101,6 +113,7 @@ public class VehicleServiceImpl implements VehicleService {
                 .formattedExitTime(formattedExitTime)
                 .remainingTime(formatRemainingTime(remainingMinutes))
                 .isLongTermParking(isLongTermParking)
+                .apartmentName(apartmentName)
                 .address(address)
                 .build();
     }

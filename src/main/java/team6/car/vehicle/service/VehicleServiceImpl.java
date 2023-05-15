@@ -101,13 +101,22 @@ public class VehicleServiceImpl implements VehicleService {
 
         String address = member.getAddress();
         LocalTime exitTime = vehicle.getVehicle_departuretime();
-        String formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+        String formattedExitTime;
 
         LocalTime currentTime = LocalTime.now();
+
+        formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+
         Duration duration = Duration.between(currentTime, exitTime);
         long remainingMinutes = duration.toMinutes();
 
         boolean isLongTermParking = vehicle.getNo_departure();
+
+        if (remainingMinutes < 0) {
+            // remainingTime이 음수인 경우: 24시간을 더해주어 현재 날 기준으로 처리
+            duration = Duration.between(currentTime, exitTime);
+            remainingMinutes = duration.toMinutes() + 24 * 60; // remainingTime에 24시간(1440분)을 더해줍니다.
+        }
 
         return MainPageDto.builder()
                 .formattedExitTime(formattedExitTime)

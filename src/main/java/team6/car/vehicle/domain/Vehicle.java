@@ -6,6 +6,7 @@ import team6.car.device.domain.Device;
 import team6.car.member.domain.Member;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -26,7 +27,6 @@ public class Vehicle {
     private String vehicle_model;
     @Column(name="vehicle_color")
     private String vehicle_color;
-
     @Column(name="vehicle_departuretime")
     private LocalTime vehicle_departuretime;
     @Column(name="no_departure")
@@ -37,4 +37,5 @@ public class Vehicle {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="device_id") //FK
     private Device device;
+
 }

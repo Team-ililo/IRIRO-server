@@ -18,8 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@RequiredArgsConstructor
+
 @RestController
+@RequiredArgsConstructor
 public class VehicleController {
     @Autowired
     private final VehicleService vehicleService;

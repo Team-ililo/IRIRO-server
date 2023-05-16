@@ -1,4 +1,4 @@
-/*
+
 package team6.car;
 
 import org.springframework.context.annotation.Bean;
@@ -15,47 +15,24 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import java.util.ArrayList;
 
 @Configuration
+@EnableSwagger2
 public class SwaggerConfig {
-    @EnableSwagger2
-    public class SwaggerConfiguration {
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("team6.car"))
+                // [Group + Artifact] ex) com.example.demo
+                .paths(PathSelectors.any())
+                .build();
+    }
 
-        @Bean
-        public Docket apiV1() {
-            return new Docket(DocumentationType.SWAGGER_2)
-                    .groupName("groupName1")
-                    .select()
-                    .apis(RequestHandlerSelectors.
-                            basePackage("com.app.edit"))
-                    .paths(PathSelectors.ant("/v1/api/**"))
-                    .build()
-                    .apiInfo(apiInfo());
-        }
-
-        @Bean
-        public Docket apiV2() {
-            return new Docket(DocumentationType.SWAGGER_2)
-                    .useDefaultResponseMessages(false)
-                    .groupName("groupName2")
-                    .select()
-                    .apis(RequestHandlerSelectors.
-                            basePackage("com.app.edit"))
-                    .paths(PathSelectors.ant("/v2/api/**"))
-                    .build()
-                    .apiInfo(apiInfo());
-        }
-
-        private ApiInfo apiInfo() {
-            return new ApiInfo(
-                    "Title",
-                    "Description",
-                    "version 1.0",
-                    "https://naver.com",
-                    new Contact("Contact Me", "https://daum.net", "colt@colt.com"),
-                    "Edit Licenses",
-                    "https://naver.com",
-                    new ArrayList<>()
-            );
-        }
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("Spring Boot Open API TEST with swagger")
+                .description("Swagger를 사용한 Spring Boot Open API 테스트")
+                .version("1.0.0")
+                .build();
     }
 }
-*/

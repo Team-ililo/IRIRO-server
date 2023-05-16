@@ -29,12 +29,13 @@ public class SwaggerConfig {
 
         @Bean
         public Docket api() {
+
             Parameter parameterBuilder = new ParameterBuilder()
-                    .name(HttpHeaders.AUTHORIZATION)
-                    .description("Access Tocken")
-                    .modelRef(new ModelRef("string"))
-                    .parameterType("header")
-                    .required(false)
+                    .name("id")
+                    .description("ID")
+                    .modelRef(new ModelRef("long"))
+                    .parameterType("path")
+                    .required(true)
                     .build();
 
             List<Parameter> globalParamters = new ArrayList<>();
@@ -42,6 +43,7 @@ public class SwaggerConfig {
 
             return new Docket(DocumentationType.SWAGGER_2)
                     .globalOperationParameters(globalParamters)
+                    .useDefaultResponseMessages(false)
                     .apiInfo(apiInfo())
                     .select()
                     .apis(RequestHandlerSelectors.basePackage("team6.car"))

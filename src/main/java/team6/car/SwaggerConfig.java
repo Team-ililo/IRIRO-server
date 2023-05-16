@@ -31,11 +31,11 @@ public class SwaggerConfig {
         public Docket api() {
 
             Parameter parameterBuilder = new ParameterBuilder()
-                    .name("id")
-                    .description("ID")
-                    .modelRef(new ModelRef("long"))
-                    .parameterType("path")
-                    .required(true)
+                    .name("")
+                    .description("")
+                    .modelRef(new ModelRef(""))
+                    .parameterType("")
+                    .required(false)
                     .build();
 
             List<Parameter> globalParamters = new ArrayList<>();

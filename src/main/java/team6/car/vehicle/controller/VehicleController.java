@@ -1,5 +1,6 @@
 package team6.car.vehicle.controller;
 
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,9 +32,36 @@ public class VehicleController {
     /**
      * 출차 정보 등록
      **/
+    @ApiOperation(value="출차 정보 등록", notes="출차 시간 및 장기 주차 여부 등록")
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "id",
+                    value = "차량 id",
+                    required = true,
+                    dataType = "long",
+                    paramType = "path"
+            ),
+            @ApiImplicitParam(
+                    name = "exitTime",
+                    value = "출차 시간",
+                    dataType = "LocalTime"
+            ),
+            @ApiImplicitParam(
+                    name = "isLongTermParking",
+                    value = "장기 주차 여부",
+                    dataType = "LocalTime"
+            ),
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "OK"),
+            @ApiResponse(code = 400, message="BAD_REQUEST"),
+            @ApiResponse(code = 404, message="NOT_FOUND"),
+            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
+    })
     @PostMapping("/vehicle/departuretime/{id}")
     public ResponseEntity<Message> enrollDeparturetime(@PathVariable Long id, @RequestBody VehicleDto vehicleDto) {
         ResponseEntity<Message> response;
+
 
         try {
             // 출차 정보 등록
@@ -73,6 +101,32 @@ public class VehicleController {
     /**
      * 출차 정보 수정
      **/
+    @ApiOperation(value="출차 정보 수정", notes="출차 시간 및 장기 주차 여부 수정")
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "id",
+                    value = "차량 id",
+                    required = true,
+                    dataType = "long",
+                    paramType = "path"
+            ),
+            @ApiImplicitParam(
+                    name = "exitTime",
+                    value = "출차 시간",
+                    dataType = "LocalTime"
+            ),
+            @ApiImplicitParam(
+                    name = "isLongTermParking",
+                    value = "장기 주차 여부",
+                    dataType = "LocalTime"
+            ),
+    })
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "OK"),
+            @ApiResponse(code = 400, message="BAD_REQUEST"),
+            @ApiResponse(code = 404, message="NOT_FOUND"),
+            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
+    })
     @PutMapping("/vehicle/departuretime/{id}")
     public ResponseEntity<Message> modifyDeparturetime(@PathVariable Long id, @RequestBody VehicleDto vehicleDto) {
         ResponseEntity<Message> response;
@@ -124,6 +178,20 @@ public class VehicleController {
     /**
      * 출차 정보 조회(메인페이지)
      **/
+    @ApiOperation(value="출차 정보 및 주소 조회", notes="메인페이지에 출력될 출차 시간, 남은 시간, 주소 정보 조회")
+    @ApiImplicitParam(
+            name = "id",
+            value = "차량 id",
+            required = true,
+            dataType = "long",
+            paramType = "path"
+    )
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "OK"),
+            @ApiResponse(code = 400, message="BAD_REQUEST"),
+            @ApiResponse(code = 404, message="NOT_FOUND"),
+            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
+    })
     @GetMapping("/vehicle/departuretime/{id}")
     public ResponseEntity<Message> getMainPageInfo(@PathVariable Long id) {
         Message responseMessage;
@@ -170,6 +238,20 @@ public class VehicleController {
     /**
      * 주변 차량 정보 조회
      **/
+    @ApiOperation(value="주변 차량 정보 조회", notes="주변 차량의 정보 및 출차 시간 조회")
+    @ApiImplicitParam(
+            name = "id",
+            value = "디바이스 id",
+            required = true,
+            dataType = "long",
+            paramType = "path"
+    )
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "OK"),
+            @ApiResponse(code = 400, message="BAD_REQUEST"),
+            @ApiResponse(code = 404, message="NOT_FOUND(주변 차량이 없습니다. 디바이스를 찾을 수 없습니다."),
+            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
+    })
     @GetMapping("/nearvehicles/{device_id}")
     public ResponseEntity<Message<List<NearVehicleDto>>> getNearVehicles(@PathVariable("device_id") Long deviceId) {
         try {

@@ -49,6 +49,7 @@ public class VehicleController {
             @ApiImplicitParam(
                     name = "isLongTermParking",
                     value = "장기 주차 여부",
+                    required = true,
                     dataType = "LocalTime"
             ),
     })
@@ -118,6 +119,7 @@ public class VehicleController {
             @ApiImplicitParam(
                     name = "isLongTermParking",
                     value = "장기 주차 여부",
+                    required = true,
                     dataType = "LocalTime"
             ),
     })
@@ -249,8 +251,8 @@ public class VehicleController {
     @ApiResponses({
             @ApiResponse(code = 200,message = "OK"),
             @ApiResponse(code = 400, message="BAD_REQUEST"),
-            @ApiResponse(code = 404, message="NOT_FOUND(주변 차량이 없습니다. 디바이스를 찾을 수 없습니다."),
-            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
+            @ApiResponse(code = 404, message="NOT_FOUND(주변 차량이 없습니다. 디바이스를 찾을 수 없습니다.)"),
+            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR(내부 서버 오류)")
     })
     @GetMapping("/nearvehicles/{id}")
     public ResponseEntity<Message<List<NearVehicleDto>>> getNearVehicles(@PathVariable("id") Long deviceId) {

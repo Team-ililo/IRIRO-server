@@ -252,8 +252,8 @@ public class VehicleController {
             @ApiResponse(code = 404, message="NOT_FOUND(주변 차량이 없습니다. 디바이스를 찾을 수 없습니다."),
             @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
     })
-    @GetMapping("/nearvehicles/{device_id}")
-    public ResponseEntity<Message<List<NearVehicleDto>>> getNearVehicles(@PathVariable("device_id") Long deviceId) {
+    @GetMapping("/nearvehicles/{id}")
+    public ResponseEntity<Message<List<NearVehicleDto>>> getNearVehicles(@PathVariable("id") Long deviceId) {
         try {
             List<NearVehicleDto> nearVehicles = nearVehicleService.getNearVehicle(deviceId);
 

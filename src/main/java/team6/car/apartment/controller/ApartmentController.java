@@ -36,10 +36,10 @@ public class ApartmentController {
             paramType = "path"
     )
     @ApiResponses({
-            @ApiResponse(code = 200,message = "OK"),
+            @ApiResponse(code = 200,message = "OK(아파트 공지사항 조회가 완료되었습니다.)"),
             @ApiResponse(code = 400, message="BAD_REQUEST"),
-            @ApiResponse(code = 404, message="NOT_FOUND(주변 차량이 없습니다. 디바이스를 찾을 수 없습니다."),
-            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
+            @ApiResponse(code = 404, message="NOT_FOUND(해당 아파트에 대한 공지사항이 없습니다.)"),
+            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR(아파트 공지사항 조회에 실패하였습니다.)")
     })
     @GetMapping("/apartment/{id}")
     public ResponseEntity<Message<List<ApartmentNoticeDto>>> getApartmentNotice(@PathVariable Long id) {

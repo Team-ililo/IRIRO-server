@@ -1,5 +1,9 @@
 package team6.car.apartment.controller;
 
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,20 @@ public class ApartmentController {
     @Autowired
     private final ApartmentNoticeService apartmentNoticeService;
 
+    @ApiOperation(value="아파트 공지사항 조회", notes="아파트 공지사항 리스트 조회")
+    @ApiImplicitParam(
+            name = "id",
+            value = "아파트 id",
+            required = true,
+            dataType = "long",
+            paramType = "path"
+    )
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "OK"),
+            @ApiResponse(code = 400, message="BAD_REQUEST"),
+            @ApiResponse(code = 404, message="NOT_FOUND(주변 차량이 없습니다. 디바이스를 찾을 수 없습니다."),
+            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
+    })
     @GetMapping("/apartment/{id}")
     public ResponseEntity<Message<List<ApartmentNoticeDto>>> getApartmentNotice(@PathVariable Long id) {
         List<ApartmentNoticeDto> apartmentNoticeDtos;

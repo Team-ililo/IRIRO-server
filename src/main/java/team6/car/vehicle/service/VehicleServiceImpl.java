@@ -28,7 +28,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /** 출차 시간 등록 **/
     @Override
-    public ResponseEntity<Message> enrollDeparturetime(Long id, LocalTime exitTime, boolean isLongTermParking){
+    public ResponseEntity<Message> enrollDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking){
         Vehicle vehicle= vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
         VehicleDto vehicleDto=VehicleDto.builder()
                 .exitTime(exitTime)
@@ -59,7 +59,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /** 출차 시간 수정 **/
     @Override
-    public ResponseEntity<Message> modifyDeparturetime(Long id, LocalTime exitTime, boolean isLongTermParking){
+    public ResponseEntity<Message> modifyDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking){
         Vehicle vehicle=vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
         vehicle.setVehicle_departuretime(exitTime);
         vehicle.setNo_departure(isLongTermParking);
@@ -111,7 +111,7 @@ public class VehicleServiceImpl implements VehicleService {
         Duration duration = Duration.between(currentTime, exitTime);
         long remainingMinutes = duration.toMinutes();
 
-        boolean isLongTermParking = vehicle.isNo_departure();
+        Boolean isLongTermParking = vehicle.isNo_departure();
 
         if (remainingMinutes < 0) {
             // remainingTime이 음수인 경우: 24시간을 더해주어 현재 날 기준으로 처리

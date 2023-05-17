@@ -30,7 +30,7 @@ public class Vehicle {
     @Column(name="vehicle_departuretime")
     private LocalTime vehicle_departuretime;
     @Column(name="no_departure")
-    private boolean no_departure;
+    private Boolean no_departure;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id") //FK
     private Member member;

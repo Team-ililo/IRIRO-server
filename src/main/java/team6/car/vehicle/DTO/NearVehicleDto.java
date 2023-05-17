@@ -25,7 +25,7 @@ public class NearVehicleDto {
     private String exitTime;
     @ApiModelProperty(example="장기 주차 여부")
     @ApiParam(value = "false")
-    private boolean isLongTermParking;
+    private Boolean isLongTermParking;
     @ApiModelProperty(example = "true")
     @ApiParam(value = "해당 차량 앞에 이중주차를 해도 되는가")
     private boolean isSatisfied;

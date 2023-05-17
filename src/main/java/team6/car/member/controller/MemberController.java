@@ -30,75 +30,6 @@ public class MemberController {
 
 
     @ApiOperation(value="회원가입")
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "name",
-                    value = " 이름",
-                    required = true,
-                    dataType = "string"
-
-            ),
-            @ApiImplicitParam(
-                    name = "phone_number",
-                    value = " 핸드폰 번호",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "vehicle_number",
-                    value = " 차량 번호",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "vehicle_model",
-                    value = " 차량 모델명",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "vehicle_color",
-                    value = " 차량 색상",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "apartment_name",
-                    value = " 아파트 이름",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "address",
-                    value = " 동/호수",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "email",
-                    value = " 이메일 아이디",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "password",
-                    value = " 비밀번호",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "pw_check",
-                    value = " 비밀번호 재입력",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "device_id",
-                    value = " 디바이스 ID",
-                    required = true,
-                    dataType = "long"
-            ),
-    })
     @ApiResponses({
             @ApiResponse(code = 200,message = "OK(회원가입 성공)"),
             @ApiResponse(code = 400, message="BAD_REQUEST"),
@@ -118,20 +49,6 @@ public class MemberController {
         return new ResponseEntity<>(message, headers, HttpStatus.OK);
     }
     @ApiOperation(value="로그인")
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "email",
-                    value = " 이메일 아이디",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "password",
-                    value = "비밀번호",
-                    required = true,
-                    dataType = "string"
-            )
-    })
     @ApiResponses({
             @ApiResponse(code = 200,message = "OK(로그인 성공)"),
             @ApiResponse(code = 400, message="BAD_REQUEST(이메일과 비밀번호를 확인해주세요)"),
@@ -209,26 +126,12 @@ public class MemberController {
     }
 
     @ApiOperation(value="신고하기",notes="비매너 주민 신고 기능")
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "id",
-                    value = "회원 id",
-                    required = true,
-                    dataType = "long"
-            ),
-            @ApiImplicitParam(
-                    name = "complaint_contents",
-                    value = " 신고 내용",
-                    required = true,
-                    dataType = "string"
-            ),
-            @ApiImplicitParam(
-                    name = "vehicle_number",
-                    value = "신고 대상의 차량 번호",
-                    required = true,
-                    dataType = "string"
-            )
-    })
+    @ApiImplicitParam(
+            name = "id",
+            value = "회원 id",
+            required = true,
+            dataType = "long"
+    )
     @ApiResponses({
             @ApiResponse(code = 200,message = "OK(신고하기 성공)"),
             @ApiResponse(code = 400, message="BAD_REQUEST"),

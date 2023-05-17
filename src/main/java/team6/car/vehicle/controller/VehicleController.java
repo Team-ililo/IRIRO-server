@@ -53,7 +53,7 @@ public class VehicleController {
 
         try {
             // 출차 정보 등록
-            vehicleService.enrollDeparturetime(id, vehicleDto.getExitTime(), vehicleDto.isNo_departure());
+            vehicleService.enrollDeparturetime(id, vehicleDto.getExitTime(), vehicleDto.getNo_departure());
 
             // 출차 정보 등록 성공 응답 생성
             String message = "출차 시간 등록이 완료되었습니다.";
@@ -109,7 +109,7 @@ public class VehicleController {
 
         try {
             // 출차 정보 수정
-            vehicleService.modifyDeparturetime(id, vehicleDto.getExitTime(), vehicleDto.isNo_departure());
+            vehicleService.modifyDeparturetime(id, vehicleDto.getExitTime(), vehicleDto.getNo_departure());
 
             // 출차 정보 수정 성공 응답 생성
             String message = "출차 시간 수정이 완료되었습니다.";

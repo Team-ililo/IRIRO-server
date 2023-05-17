@@ -28,7 +28,7 @@ public class VehicleDto {
     private LocalTime exitTime;
     @ApiModelProperty(example = "false")
     @ApiParam(value = "장기 주차 여부")
-    private boolean no_departure;
+    private Boolean no_departure;
     @ApiModelProperty(example = "101동 102호")
     @ApiParam(value = "아파트 동/호수")
     private String address;

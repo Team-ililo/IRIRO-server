@@ -19,7 +19,7 @@ public class MainPageDto {
     private String remainingTime;
     @ApiModelProperty(example = "false")
     @ApiParam(value = "장기 주차 여부")
-    private boolean isLongTermParking;
+    private Boolean isLongTermParking;
     @ApiModelProperty(example = "푸르지오")
     @ApiParam(value = "아파트 이름")
     private String apartmentName;

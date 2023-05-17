@@ -13,7 +13,7 @@ import java.time.LocalTime;
 public class MainPageDto {
     @ApiModelProperty(example = "08:30")
     @ApiParam(value = "출차 시간 hh:mm")
-    private String formattedExitTime;
+    private String exitTime;
     @ApiModelProperty(example = "12:15")
     @ApiParam(value = "출차 시간까지의 남은 시간 hh:mm")
     private String remainingTime;

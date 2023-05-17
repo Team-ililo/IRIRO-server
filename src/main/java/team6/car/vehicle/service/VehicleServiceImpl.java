@@ -1,6 +1,8 @@
 package team6.car.vehicle.service;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import java.time.temporal.ChronoUnit;
 @RequiredArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
 
+    private static final Logger logger = LoggerFactory.getLogger(VehicleService.class);
     private final VehicleRepository vehicleRepository;
 
     /** 출차 시간 등록 **/
@@ -40,10 +43,19 @@ public class VehicleServiceImpl implements VehicleService {
         String message;
         StatusEnum status;
 
-        if (isLongTermParking && exitTime != null) {
+        System.out.println("This is a log message");
+        logger.info("exitTime: {}", exitTime);
+        logger.info("isLongTermParking: {}", isLongTermParking);
+
+        if (Boolean.TRUE.equals(isLongTermParking) && (exitTime != null)) {
             message = "출차 시간 등록에 실패하였습니다. 장기 주차를 선택하셨습니다.";
             status = StatusEnum.BAD_REQUEST;
-        } else {
+        }
+        else if (Boolean.FALSE.equals(isLongTermParking) && (exitTime==null)) {
+            message = "출차 시간 등록에 실패하였습니다. 출차 시간을 등록하세요";
+            status = StatusEnum.BAD_REQUEST;
+        }
+        else {
             message = "출차 시간 등록이 완료되었습니다.";
             status = StatusEnum.OK;
         }
@@ -66,12 +78,16 @@ public class VehicleServiceImpl implements VehicleService {
         String message;
         StatusEnum status;
 
-        if (vehicle.getVehicle_departuretime() != null) {
+        if (Boolean.TRUE.equals(isLongTermParking) && exitTime != null) {
+            message = "출차 시간 수정에 실패하였습니다. 장기 주차를 선택하셨습니다.";
+            status = StatusEnum.BAD_REQUEST;
+        }
+        else if (Boolean.FALSE.equals(isLongTermParking) && (exitTime==null)) {
+                message = "출차 시간 등록에 실패하였습니다. 출차 시간을 등록하세요";
+                status = StatusEnum.BAD_REQUEST;
+        } else {
             message = "출차 시간 수정이 완료되었습니다.";
             status = StatusEnum.OK;
-        } else {
-            message = "출차 시간 수정에 실패하였습니다.";
-            status = StatusEnum.INTERNAL_SERVER_ERROR;
         }
 
         // 응답 생성
@@ -100,27 +116,31 @@ public class VehicleServiceImpl implements VehicleService {
             }
         }
 
+        long remainingMinutes=0;
         String address = member.getAddress();
         LocalTime exitTime = vehicle.getVehicle_departuretime();
-        String formattedExitTime;
-
         LocalTime currentTime = LocalTime.now();
 
-        formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
-
-        Duration duration = Duration.between(currentTime, exitTime);
-        long remainingMinutes = duration.toMinutes();
-
         Boolean isLongTermParking = vehicle.isNo_departure();
+        String formattedExitTime = null; // Initialize with a default value
 
-        if (remainingMinutes < 0) {
-            // remainingTime이 음수인 경우: 24시간을 더해주어 현재 날 기준으로 처리
-            duration = Duration.between(currentTime, exitTime);
-            remainingMinutes = duration.toMinutes() + 24 * 60; // remainingTime에 24시간(1440분)을 더해줍니다.
+        if (!isLongTermParking && exitTime != null) {
+            formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
+
+            Duration duration = Duration.between(currentTime, exitTime);
+            remainingMinutes = duration.toMinutes();
+
+            if (remainingMinutes < 0) {
+                // remainingTime이 음수인 경우: 24시간을 더해주어 현재 날 기준으로 처리
+                duration = Duration.between(currentTime, exitTime);
+                remainingMinutes = duration.toMinutes() + 24 * 60; // remainingTime에 24시간(1440분)을 더해줍니다.
+            }
+
+            formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
         }
 
         return MainPageDto.builder()
-                .formattedExitTime(formattedExitTime)
+                .exitTime(formattedExitTime)
                 .remainingTime(formatRemainingTime(remainingMinutes))
                 .isLongTermParking(isLongTermParking)
                 .apartmentName(apartmentName)

@@ -28,23 +28,24 @@ public class VehicleServiceImpl implements VehicleService {
 
     /** 출차 시간 등록 **/
     @Override
-    public ResponseEntity<Message> enrollDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking){
+    public ResponseEntity<Message> enrollDeparturetime(Long id, LocalTime exitTime, boolean isLongTermParking){
         Vehicle vehicle= vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
         VehicleDto vehicleDto=VehicleDto.builder()
                 .exitTime(exitTime)
-                .isLongTermParking(isLongTermParking)
+                .no_departure(isLongTermParking)
                 .build();
         vehicle.setVehicle_departuretime(vehicleDto.getExitTime());
+        vehicle.setNo_departure(isLongTermParking);
 
         String message;
         StatusEnum status;
 
-        if (vehicle.getVehicle_departuretime() != null) {
+        if (isLongTermParking && exitTime != null) {
+            message = "출차 시간 등록에 실패하였습니다. 장기 주차를 선택하셨습니다.";
+            status = StatusEnum.BAD_REQUEST;
+        } else {
             message = "출차 시간 등록이 완료되었습니다.";
             status = StatusEnum.OK;
-        } else {
-            message = "출차 시간 등록에 실패하였습니다.";
-            status = StatusEnum.INTERNAL_SERVER_ERROR;
         }
 
         // 응답 생성
@@ -58,7 +59,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     /** 출차 시간 수정 **/
     @Override
-    public ResponseEntity<Message> modifyDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking){
+    public ResponseEntity<Message> modifyDeparturetime(Long id, LocalTime exitTime, boolean isLongTermParking){
         Vehicle vehicle=vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
         vehicle.setVehicle_departuretime(exitTime);
         vehicle.setNo_departure(isLongTermParking);
@@ -110,7 +111,7 @@ public class VehicleServiceImpl implements VehicleService {
         Duration duration = Duration.between(currentTime, exitTime);
         long remainingMinutes = duration.toMinutes();
 
-        boolean isLongTermParking = vehicle.getNo_departure();
+        boolean isLongTermParking = vehicle.isNo_departure();
 
         if (remainingMinutes < 0) {
             // remainingTime이 음수인 경우: 24시간을 더해주어 현재 날 기준으로 처리

@@ -31,7 +31,7 @@ public class NearVehicle {
     @Column(name="near_vehicle_departuretime")
     private LocalTime near_vehicle_departuretime;
     @Column(name="no_departure")
-    private Boolean No_departure;
+    private boolean No_departure;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="near_device_id") //FK
     private NearDevice near_device;

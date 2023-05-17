@@ -33,26 +33,13 @@ public class VehicleController {
      * 출차 정보 등록
      **/
     @ApiOperation(value="출차 정보 등록", notes="출차 시간 및 장기 주차 여부 등록")
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "id",
-                    value = "차량 id",
-                    required = true,
-                    dataType = "long",
-                    paramType = "path"
-            ),
-            @ApiImplicitParam(
-                    name = "exitTime",
-                    value = "출차 시간",
-                    dataType = "LocalTime"
-            ),
-            @ApiImplicitParam(
-                    name = "isLongTermParking",
-                    value = "장기 주차 여부",
-                    required = true,
-                    dataType = "LocalTime"
-            ),
-    })
+    @ApiImplicitParam(
+            name = "id",
+            value = "차량 id",
+            required = true,
+            dataType = "long",
+            paramType = "path"
+    )
     @ApiResponses({
             @ApiResponse(code = 200,message = "OK"),
             @ApiResponse(code = 400, message="BAD_REQUEST"),
@@ -103,26 +90,13 @@ public class VehicleController {
      * 출차 정보 수정
      **/
     @ApiOperation(value="출차 정보 수정", notes="출차 시간 및 장기 주차 여부 수정")
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "id",
-                    value = "차량 id",
-                    required = true,
-                    dataType = "long",
-                    paramType = "path"
-            ),
-            @ApiImplicitParam(
-                    name = "exitTime",
-                    value = "출차 시간",
-                    dataType = "LocalTime"
-            ),
-            @ApiImplicitParam(
-                    name = "isLongTermParking",
-                    value = "장기 주차 여부",
-                    required = true,
-                    dataType = "LocalTime"
-            ),
-    })
+    @ApiImplicitParam(
+            name = "id",
+            value = "차량 id",
+            required = true,
+            dataType = "long",
+            paramType = "path"
+    )
     @ApiResponses({
             @ApiResponse(code = 200,message = "OK"),
             @ApiResponse(code = 400, message="BAD_REQUEST"),

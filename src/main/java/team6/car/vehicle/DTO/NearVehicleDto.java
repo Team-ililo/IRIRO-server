@@ -20,8 +20,8 @@ public class NearVehicleDto {
     @ApiModelProperty(example = "검은색")
     @ApiParam(value = "차량 색상")
     private String color;
-    @ApiModelProperty(example = "08:30:00")
-    @ApiParam(value = "출차 시간 hh:mm:ss")
+    @ApiModelProperty(example = "08:30")
+    @ApiParam(value = "출차 시간 hh:mm")
     private String exitTime;
     @ApiModelProperty(example="장기 주차 여부")
     @ApiParam(value = "false")

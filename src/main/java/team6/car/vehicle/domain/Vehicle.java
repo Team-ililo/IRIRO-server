@@ -30,12 +30,20 @@ public class Vehicle {
     @Column(name="vehicle_departuretime")
     private LocalTime vehicle_departuretime;
     @Column(name="no_departure")
-    private Boolean No_departure;
+    private boolean no_departure;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="member_id") //FK
     private Member member;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="device_id") //FK
     private Device device;
+
+    public void setNo_departure(boolean no_departure) {
+        this.no_departure = no_departure;
+    }
+
+    public boolean isNo_departure() {
+            return no_departure;
+    }
 
 }

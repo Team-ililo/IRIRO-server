@@ -96,7 +96,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
             nearVehicle.setNear_vehicle_model(vehicle.getVehicle_model());
             nearVehicle.setNear_vehicle_color(vehicle.getVehicle_color());
             nearVehicle.setNear_vehicle_departuretime(vehicle.getVehicle_departuretime());
-            nearVehicle.setNo_departure(vehicle.getNo_departure());
+            nearVehicle.setNo_departure(vehicle.isNo_departure());
             nearVehicles.add(nearVehicle);
         }
 

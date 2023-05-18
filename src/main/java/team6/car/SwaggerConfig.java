@@ -29,7 +29,7 @@ public class SwaggerConfig {
 
         @Bean
         public Docket api() {
-
+/*
             Parameter parameterBuilder = new ParameterBuilder()
                     .name("")
                     .description("")
@@ -50,7 +50,19 @@ public class SwaggerConfig {
                     .paths(PathSelectors.any())
                     .build();
         }
+*/
+            // id 파라미터를 추가하지 않음
+            List<Parameter> globalParameters = new ArrayList<>();
 
+            return new Docket(DocumentationType.SWAGGER_2)
+                    .globalOperationParameters(globalParameters)
+                    .useDefaultResponseMessages(false)
+                    .apiInfo(apiInfo())
+                    .select()
+                    .apis(RequestHandlerSelectors.basePackage("team6.car"))
+                    .paths(PathSelectors.any())
+                    .build();
+        }
         public ApiInfo apiInfo() {
             return new ApiInfoBuilder()
                     .title(API_NAME)

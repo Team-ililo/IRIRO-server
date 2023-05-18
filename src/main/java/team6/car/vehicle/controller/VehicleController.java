@@ -65,7 +65,7 @@ public class VehicleController {
             response = ResponseEntity.ok(responseMessage);
         } catch (IllegalArgumentException e) {
             // 잘못된 요청인 경우 (BAD_REQUEST)
-            String message = "잘못된 요청입니다.";
+            String message = e.getMessage(); // 예외 객체에서 메시지 가져오기
             StatusEnum status = StatusEnum.BAD_REQUEST;
             Message responseMessage = new Message();
             responseMessage.setStatus(status);

@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -19,7 +20,7 @@ public class ApartmentNotice {
     private Long apartment_notice_id;
     @CreatedDate
     @Column(name="apartment_notice_date", updatable = false)
-    private LocalDateTime apartment_notice_date;
+    private LocalDate apartment_notice_date;
 
     @Column(name="apartment_notice")
     private String apartment_notice;

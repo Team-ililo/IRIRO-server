@@ -83,10 +83,12 @@ public class VehicleServiceImpl implements VehicleService {
         if (Boolean.TRUE.equals(isLongTermParking) && exitTime != null) {
             message = "출차 시간 수정에 실패하였습니다. 장기 주차를 선택하셨습니다.";
             status = StatusEnum.BAD_REQUEST;
+            throw new IllegalArgumentException(message);
         }
         else if (Boolean.FALSE.equals(isLongTermParking) && (exitTime==null)) {
                 message = "출차 시간 등록에 실패하였습니다. 출차 시간을 등록하세요";
                 status = StatusEnum.BAD_REQUEST;
+                throw new IllegalArgumentException(message);
         } else {
             message = "출차 시간 수정이 완료되었습니다.";
             status = StatusEnum.OK;

@@ -135,12 +135,6 @@ public class MemberController {
     }
 
     @ApiOperation(value="신고하기",notes="비매너 주민 신고 기능")
-    @ApiImplicitParam(
-            name = "id",
-            value = "회원 id",
-            required = true,
-            dataType = "long"
-    )
     @ApiResponses({
             @ApiResponse(code = 200,message = "OK(신고하기 성공)"),
             @ApiResponse(code = 400, message="BAD_REQUEST"),

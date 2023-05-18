@@ -2,6 +2,8 @@ package team6.car.member.controller;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import team6.car.apartment.repository.ApartmentRepository;
+import team6.car.device.repository.DeviceRepository;
 import team6.car.member.DTO.*;
 import team6.car.member.domain.Complaint;
 import team6.car.member.domain.Member;
@@ -14,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import team6.car.vehicle.domain.Vehicle;
+import team6.car.vehicle.repository.VehicleRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -27,7 +31,9 @@ import java.util.Optional;
 public class MemberController {
     private final MemberServiceImpl memberService;
     private final MemberRepository memberRepository;
-
+    private final ApartmentRepository apartmentRepository;
+    private final VehicleRepository vehicleRepository;
+    private final DeviceRepository deviceRepository;
 
     @ApiOperation(value="회원가입")
     @ApiResponses({
@@ -60,6 +66,7 @@ public class MemberController {
         String email = loginDto.getEmail();
         String password = loginDto.getPassword();
         Member member = memberRepository.findByEmail(email).orElseThrow();
+        Vehicle vehicle = vehicleRepository.findByMemberId(member.getMember_id()).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
         Message message = new Message();
         HttpHeaders headers= new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -68,6 +75,8 @@ public class MemberController {
             session.setAttribute("member", member);
             message.setStatus(StatusEnum.OK);
             message.setMessage("로그인 성공");
+            ReturnId returnId = new ReturnId(member.getMember_id(), member.getApartment().getApartment_id(), vehicle.getDevice().getDevice_id(), vehicle.getVehicle_id());
+            message.setData(returnId);
             return new ResponseEntity<>(message, headers, HttpStatus.OK);
         } else {
             message.setStatus(StatusEnum.NOT_FOUND);
@@ -114,7 +123,7 @@ public class MemberController {
     })
     @GetMapping("/members/{id}") //회원 정보 조회
     public ResponseEntity<?> getMemberById(@PathVariable Long id) throws Exception {
-        List<MemberProfileDto> member = memberService.getMemberById(id);
+        MemberProfileDto member = memberService.getMemberById(id);
         Message message = new Message();
         HttpHeaders headers= new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
@@ -138,7 +147,7 @@ public class MemberController {
             @ApiResponse(code = 404, message="NOT_FOUND"),
             @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
     })
-    @PostMapping("/members/{id}/complaints") //신고하기
+    @PostMapping("/members/complaints") //신고하기
     public ResponseEntity<?> report(@RequestBody ReportDto reportDto) throws Exception {
         Complaint complaint = memberService.report(reportDto);
         Message message = new Message();
@@ -167,7 +176,7 @@ public class MemberController {
     })
     @GetMapping("/members/{id}/complaints") //신고 내용 조회
     public ResponseEntity<?> getReportInfo(@PathVariable Long id) throws Exception {
-        List<getReportDto> report = memberService.getReportInfo(id);
+        getReportDto report = memberService.getReportInfo(id);
         Message message = new Message();
         HttpHeaders headers= new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));

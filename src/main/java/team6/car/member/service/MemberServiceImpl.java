@@ -94,8 +94,7 @@ public class MemberServiceImpl implements MemberService {
 
     /**회원 id 로 정보 조회 (이메일, 차량 번호, 주소, 신고 횟수)**/
     @Override
-    public List<MemberProfileDto> getMemberById(Long id) throws Exception{
-        List<MemberProfileDto> memberProfileDto = new ArrayList<>();
+    public MemberProfileDto getMemberById(Long id) throws Exception{
         Member member = memberRepository.findById(id).orElseGet(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다.");
         });
@@ -103,8 +102,7 @@ public class MemberServiceImpl implements MemberService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "차량 정보가 존재하지 않습니다.");
         });
 
-        MemberProfileDto memberProfileDto1 = new MemberProfileDto(member.getEmail(), vehicle.getVehicle_number(), member.getAddress(), member.getNumber_of_complaints());
-        memberProfileDto.add(memberProfileDto1);
+        MemberProfileDto memberProfileDto = new MemberProfileDto(member.getEmail(), vehicle.getVehicle_number(), member.getAddress(), member.getNumber_of_complaints());
         return memberProfileDto;
     }
 
@@ -133,10 +131,20 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
+    /**member_id를 가지고 있는 Complaint_contents들을 가져옴**/
+    public List<String> getComplaintContentsByMemberId(Long memberId) {
+        List<Complaint> complaints = complaintRepository.findByMemberId(memberId);
+
+        List<String> complaintContentsList = new ArrayList<>();
+        for (Complaint complaint : complaints) {
+            complaintContentsList.add(complaint.getComplaint_contents());
+        }
+        return complaintContentsList;
+    }
+
     /**신고 내용 조회**/
     @Override
-    public List<getReportDto> getReportInfo(Long id) throws Exception {
-        List<getReportDto> getReportDto1 = new ArrayList<>();
+    public getReportDto getReportInfo(Long id) throws Exception {
         Member member = memberRepository.findById(id).orElseGet(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다.");
         });
@@ -144,8 +152,8 @@ public class MemberServiceImpl implements MemberService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "신고 당한 내역이 존재하지 않습니다.");
         });
 
-        getReportDto getReportDto2 = new getReportDto(complaint.getComplaint_contents(), member.getNumber_of_complaints());
-        getReportDto1.add(getReportDto2);
-        return getReportDto1;
+        List<String> complaintContentsList = getComplaintContentsByMemberId(id);
+        getReportDto getReportDto = new getReportDto(complaintContentsList, member.getNumber_of_complaints());
+        return getReportDto;
     }
 }

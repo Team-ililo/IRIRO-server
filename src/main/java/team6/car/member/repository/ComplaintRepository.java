@@ -14,4 +14,5 @@ public interface ComplaintRepository  extends JpaRepository<Complaint, Long> {
     Complaint save(Complaint complaint);
     Optional<Complaint> findComplaintByMemberId(Long member_id);
     List<Complaint> findByMemberId(Long memberId);
+    Optional<List<Complaint>> findComplaintsByMemberId(Long memberId);
 }

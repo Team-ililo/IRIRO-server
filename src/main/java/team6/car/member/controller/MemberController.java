@@ -22,8 +22,6 @@ import team6.car.vehicle.repository.VehicleRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor //의존성 주입
@@ -170,7 +168,7 @@ public class MemberController {
     })
     @GetMapping("/members/{id}/complaints") //신고 내용 조회
     public ResponseEntity<?> getReportInfo(@PathVariable Long id) throws Exception {
-        getReportDto report = memberService.getReportInfo(id);
+        GetReportDto report = memberService.getReportInfo(id);
         Message message = new Message();
         HttpHeaders headers= new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));

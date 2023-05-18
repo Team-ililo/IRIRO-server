@@ -1,13 +1,12 @@
 package team6.car.member.service;
 
-import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import team6.car.apartment.domain.Apartment;
 import team6.car.member.DTO.MemberProfileDto;
 import team6.car.member.DTO.ReportDto;
-import team6.car.member.DTO.getReportDto;
+import team6.car.member.DTO.GetReportDto;
 import team6.car.member.domain.Complaint;
 import team6.car.member.domain.Member;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import team6.car.device.repository.DeviceRepository;
 import team6.car.vehicle.repository.VehicleRepository;
 import team6.car.member.repository.MemberRepository;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -142,18 +140,27 @@ public class MemberServiceImpl implements MemberService {
         return complaintContentsList;
     }
 
-    /**신고 내용 조회**/
+    /** 신고 내용 조회 **/
     @Override
-    public getReportDto getReportInfo(Long id) throws Exception {
-        Member member = memberRepository.findById(id).orElseGet(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다.");
-        });
-        Complaint complaint = complaintRepository.findComplaintByMemberId(id).orElseGet(() -> {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "신고 당한 내역이 존재하지 않습니다.");
-        });
+    public GetReportDto getReportInfo(Long id) throws Exception {
+        Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다."));
 
-        List<String> complaintContentsList = getComplaintContentsByMemberId(id);
-        getReportDto getReportDto = new getReportDto(complaintContentsList, member.getNumber_of_complaints());
+        Optional<List<Complaint>> complaintsOptional = complaintRepository.findComplaintsByMemberId(id);
+        List<Complaint> complaints = complaintsOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "신고 당한 내역이 존재하지 않습니다."));
+
+        List<GetReportDto.ReportInfo> reportInfos = new ArrayList<>();
+        for (Complaint complaint : complaints) {
+            GetReportDto.ReportInfo reportInfo = new GetReportDto.ReportInfo();
+            reportInfo.setComplaint_contents(complaint.getComplaint_contents());
+            reportInfo.setComplaint_date(complaint.getComplaint_date());
+            reportInfos.add(reportInfo);
+        }
+
+        GetReportDto getReportDto = new GetReportDto();
+        getReportDto.setReports(reportInfos);
+        getReportDto.setNumber_of_complaints(member.getNumber_of_complaints());
+
         return getReportDto;
     }
 }

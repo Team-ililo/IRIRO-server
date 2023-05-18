@@ -13,6 +13,7 @@ import team6.car.vehicle.domain.Vehicle;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +40,15 @@ public class ComplaintRepositoryImpl implements ComplaintRepository{
                 .setParameter("member_id", member_id)
                 .getResultList();
         return result.stream().findAny();
+    }
+
+    @Override
+    public Optional<List<Complaint>> findComplaintsByMemberId(Long memberId) {
+        TypedQuery<Complaint> query = em.createQuery(
+                "SELECT c FROM Complaint_info c WHERE c.member.member_id = :memberId", Complaint.class);
+        query.setParameter("memberId", memberId);
+        List<Complaint> complaints = query.getResultList();
+        return Optional.ofNullable(complaints);
     }
 
     @Override

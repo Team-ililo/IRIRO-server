@@ -6,6 +6,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -23,9 +24,13 @@ public class Complaint {
     private String complaint_contents;
     @CreatedDate
     @Column(name="complaint_date", updatable = false)
-    private LocalDateTime complaint_date;
+    private LocalDate complaint_date;
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY) //many = complaint info, one = member 하나의 멤버는 여러 개의 신고를 가질 수 있다
     @JoinColumn(name="member_id") //FK
     private Member member;
+    @PrePersist
+    protected void onCreate() {
+        complaint_date = LocalDate.now();
+    }
 }

@@ -42,6 +42,14 @@ public class ComplaintRepositoryImpl implements ComplaintRepository{
     }
 
     @Override
+    public List<Complaint> findByMemberId(Long member_id) {
+        List<Complaint> result = em.createQuery("select m from Complaint_info m where m.member.member_id = :member_id",Complaint.class)
+                .setParameter("member_id", member_id)
+                .getResultList();
+        return result;
+    }
+
+    @Override
     public List<Complaint> findAll() {
         return null;
     }

@@ -35,6 +35,30 @@ public class ApartmentNoticeServiceImpl implements ApartmentNoticeService{
     }
 
     @Override
+    public Optional<List<ApartmentNoticeDto>> getApartmentNotice(String apartmentName) {
+        List<ApartmentNotice> apartmentNotices = apartmentNoticeRepository.findByApartment_name(apartmentName);
+        if (apartmentNotices.isEmpty()) {
+            return Optional.empty();
+        }
+        List<ApartmentNoticeDto> noticeDtos = apartmentNotices.stream()
+                .map(apartmentNotice -> ApartmentNoticeDto.builder()
+                        .apartment_notice_date(apartmentNotice.getApartment_notice_date())
+                        .notice(apartmentNotice.getApartment_notice())
+                        .build())
+                .collect(Collectors.toList());
+        return Optional.of(noticeDtos);
+    }
+
+    @Override
+    public Optional<List<ApartmentNotice>> findByApartmentName(String apartmentName) {
+        List<ApartmentNotice> apartmentNotices = apartmentNoticeRepository.findByApartment_name(apartmentName);
+        if (apartmentNotices.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(apartmentNotices);
+    }
+
+    @Override
     public List<ApartmentNotice> findByApartmentId(Long apartment_id) {
         List<ApartmentNotice> apartmentNotices = apartmentNoticeRepository.findByApartmentId(apartment_id);
         if (apartmentNotices.isEmpty()) {

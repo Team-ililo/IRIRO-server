@@ -9,4 +9,7 @@ import java.util.Optional;
 public interface ApartmentNoticeService {
     List<ApartmentNoticeDto> getApartmentNotice(Long id);
     List<ApartmentNotice> findByApartmentId(Long apartmentId);
+
+    Optional<List<ApartmentNoticeDto>> getApartmentNotice(String apartmentName);
+    Optional<List<ApartmentNotice>> findByApartmentName(String apartmentName);
 }

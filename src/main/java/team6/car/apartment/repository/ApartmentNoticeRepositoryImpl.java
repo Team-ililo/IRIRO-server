@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
+import org.springframework.stereotype.Repository;
+import team6.car.apartment.domain.Apartment;
 import team6.car.apartment.domain.ApartmentNotice;
 import team6.car.vehicle.domain.Vehicle;
 
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-
+@Repository
 public class ApartmentNoticeRepositoryImpl implements ApartmentNoticeRepository{
     @PersistenceContext
     private final EntityManager em;
@@ -186,5 +188,11 @@ public class ApartmentNoticeRepositoryImpl implements ApartmentNoticeRepository{
     @Override
     public void deleteAll() {
 
+    }
+    @Override
+    public List<ApartmentNotice> findByApartment_name(String apartment_name) {
+        TypedQuery<ApartmentNotice> query = em.createQuery("SELECT an FROM ApartmentNotice an WHERE an.apartment.apartment_name = :apartment_name", ApartmentNotice.class);
+        query.setParameter("apartment_name", apartment_name);
+        return query.getResultList();
     }
 }

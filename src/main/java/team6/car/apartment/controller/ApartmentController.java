@@ -57,6 +57,11 @@ public class ApartmentController {
                     .collect(Collectors.toList());
             status = StatusEnum.OK;
             message = "아파트 공지사항 조회가 완료되었습니다.";
+
+            if (apartmentNoticeDtos.isEmpty()) {
+                message = "해당 아파트에 대한 공지사항이 없습니다.";
+            }
+
         } catch (RuntimeException e) {
             apartmentNoticeDtos = null;
             status = StatusEnum.INTERNAL_SERVER_ERROR;

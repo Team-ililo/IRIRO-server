@@ -35,6 +35,15 @@ public class ApartmentNoticeServiceImpl implements ApartmentNoticeService{
     }
 
     @Override
+    public List<ApartmentNotice> findByApartmentId(Long apartment_id) {
+        List<ApartmentNotice> apartmentNotices = apartmentNoticeRepository.findByApartmentId(apartment_id);
+        if (apartmentNotices.isEmpty()) {
+            throw new RuntimeException("아파트 공지사항을 찾을 수 없습니다.");
+        }
+        return apartmentNotices;
+    }
+
+    @Override
     public Optional<List<ApartmentNoticeDto>> getApartmentNotice(String apartmentName) {
         List<ApartmentNotice> apartmentNotices = apartmentNoticeRepository.findByApartment_name(apartmentName);
         if (apartmentNotices.isEmpty()) {
@@ -56,14 +65,5 @@ public class ApartmentNoticeServiceImpl implements ApartmentNoticeService{
             return Optional.empty();
         }
         return Optional.of(apartmentNotices);
-    }
-
-    @Override
-    public List<ApartmentNotice> findByApartmentId(Long apartment_id) {
-        List<ApartmentNotice> apartmentNotices = apartmentNoticeRepository.findByApartmentId(apartment_id);
-        if (apartmentNotices.isEmpty()) {
-            throw new RuntimeException("아파트 공지사항을 찾을 수 없습니다.");
-        }
-        return apartmentNotices;
     }
 }

@@ -73,7 +73,7 @@ public class MemberController {
             session.setAttribute("member", member);
             message.setStatus(StatusEnum.OK);
             message.setMessage("로그인 성공");
-            ReturnId returnId = new ReturnId(member.getMember_id(), member.getApartment().getApartment_id(), vehicle.getDevice().getDevice_id(), vehicle.getVehicle_id());
+            ReturnId returnId = new ReturnId(member.getMember_id(), member.getApartment().getApartment_name(), vehicle.getDevice().getDevice_id(), vehicle.getVehicle_id());
             message.setData(returnId);
             return new ResponseEntity<>(message, headers, HttpStatus.OK);
         } else {

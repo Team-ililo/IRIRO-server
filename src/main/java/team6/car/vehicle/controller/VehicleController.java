@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import team6.car.vehicle.DTO.MainPageDto;
 import team6.car.vehicle.DTO.NearVehicleDto;
 import team6.car.vehicle.DTO.VehicleDto;
+import team6.car.vehicle.domain.Vehicle;
+import team6.car.vehicle.repository.VehicleRepository;
 import team6.car.vehicle.response.Message;
 import team6.car.vehicle.response.StatusEnum;
 import team6.car.vehicle.service.NearVehicleService;
@@ -18,6 +20,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @RestController
@@ -25,6 +28,8 @@ import java.util.NoSuchElementException;
 public class VehicleController {
     @Autowired
     private final VehicleService vehicleService;
+    @Autowired
+    private final VehicleRepository vehicleRepository;
     @Autowired
     private final NearVehicleService nearVehicleService;
 
@@ -177,8 +182,8 @@ public class VehicleController {
             // 출차 정보 조회
             MainPageDto mainPageDto = vehicleService.getDeparturetime(id);
 
-            if (mainPageDto!=null) {
-            // 출차 정보 존재
+            if (mainPageDto != null) {
+                // 출차 정보 존재
                 String message = "출차 정보 조회가 완료되었습니다.";
                 StatusEnum status = StatusEnum.OK;
                 responseMessage = new Message();
@@ -188,7 +193,7 @@ public class VehicleController {
 
                 httpStatus = HttpStatus.OK;
             } else {
-
+                // 출차 정보가 존재하지 않음
                 String message = "출차 정보가 존재하지 않습니다.";
                 StatusEnum status = StatusEnum.NOT_FOUND;
                 responseMessage = new Message();
@@ -197,8 +202,8 @@ public class VehicleController {
                 responseMessage.setData(null);
                 httpStatus = HttpStatus.NOT_FOUND;
             }
-        } catch (Exception e) {
-            // 출차 정보 조회 실패 응답 생성
+        } catch (RuntimeException e) {
+            // 예외 처리
             String message = "출차 정보 조회에 실패하였습니다.";
             StatusEnum status = StatusEnum.INTERNAL_SERVER_ERROR;
             responseMessage = new Message();
@@ -206,6 +211,18 @@ public class VehicleController {
             responseMessage.setMessage(message);
             responseMessage.setData(null);
             httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        Optional<Vehicle> optionalVehicle = vehicleRepository.findById(id);
+        if (!optionalVehicle.isPresent()) {
+            // 존재하지 않는 차량에 대한 예외 처리
+            String message = "존재하지 않는 차량입니다.";
+            StatusEnum status = StatusEnum.NOT_FOUND;
+            responseMessage = new Message();
+            responseMessage.setStatus(status);
+            responseMessage.setMessage(message);
+            responseMessage.setData(null);
+            httpStatus = HttpStatus.NOT_FOUND;
         }
 
         return ResponseEntity.status(httpStatus).body(responseMessage);

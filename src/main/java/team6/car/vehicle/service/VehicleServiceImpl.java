@@ -112,23 +112,23 @@ public class VehicleServiceImpl implements VehicleService {
 
         Apartment apartment = null;
         String apartmentName = null;
+        String address = null;
+        String formattedExitTime = null;
+        long remainingMinutes = 0;
+        Boolean isLongTermParking = null;
 
         if (member != null) {
             apartment = member.getApartment();
+            address = member.getAddress();
             if (apartment != null) {
                 apartmentName = apartment.getApartment_name();
             }
         }
 
-        long remainingMinutes=0;
-        String address = member.getAddress();
         LocalTime exitTime = vehicle.getVehicle_departuretime();
         LocalTime currentTime = LocalTime.now();
 
-        Boolean isLongTermParking = vehicle.isNo_departure();
-        String formattedExitTime = null; // Initialize with a default value
-
-        if (!isLongTermParking && exitTime != null) {
+        if (exitTime != null && Boolean.FALSE.equals(vehicle.isNo_departure())) {
             formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
 
             Duration duration = Duration.between(currentTime, exitTime);
@@ -139,18 +139,17 @@ public class VehicleServiceImpl implements VehicleService {
                 duration = Duration.between(currentTime, exitTime);
                 remainingMinutes = duration.toMinutes() + 24 * 60; // remainingTime에 24시간(1440분)을 더해줍니다.
             }
-
-            formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
         }
 
         return MainPageDto.builder()
                 .exitTime(formattedExitTime)
                 .remainingTime(formatRemainingTime(remainingMinutes))
-                .isLongTermParking(isLongTermParking)
+                .isLongTermParking(vehicle.getNo_departure())
                 .apartmentName(apartmentName)
                 .address(address)
                 .build();
     }
+
     private String formatRemainingTime(long minutes) {
         long hours = minutes / 60;
         long remainingMinutes = minutes % 60;

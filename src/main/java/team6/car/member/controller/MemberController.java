@@ -2,6 +2,7 @@ package team6.car.member.controller;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 import team6.car.apartment.repository.ApartmentRepository;
 import team6.car.device.repository.DeviceRepository;
@@ -23,6 +24,8 @@ import team6.car.vehicle.repository.VehicleRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -46,6 +49,47 @@ public class MemberController {
     @PostMapping("/members")//회원가입
     public ResponseEntity<Message> register(@RequestBody UserDto userDto) throws Exception {
         try {
+            List<String> emptyFields = new ArrayList<>();
+
+            // 입력하지 않은 정보가 있는지 확인
+            if (StringUtils.isEmpty(userDto.getVehicle_model())) {
+                emptyFields.add("차량 모델");
+            }
+            if (StringUtils.isEmpty(userDto.getName())) {
+                emptyFields.add("이름");
+            }
+            if (StringUtils.isEmpty(userDto.getApartment_name())) {
+                emptyFields.add("아파트 이름");
+            }
+            if (StringUtils.isEmpty(userDto.getEmail())) {
+                emptyFields.add("이메일 아이디");
+            }
+            if (StringUtils.isEmpty(userDto.getAddress())) {
+                emptyFields.add("주소");
+            }
+            if (StringUtils.isEmpty(userDto.getPhone_number())) {
+                emptyFields.add("핸드폰 번호");
+            }
+            if (StringUtils.isEmpty(userDto.getVehicle_number())) {
+                emptyFields.add("차량 번호");
+            }
+            if (StringUtils.isEmpty(userDto.getVehicle_color())) {
+                emptyFields.add("차량 색상");
+            }
+            if (StringUtils.isEmpty(userDto.getPassword())) {
+                emptyFields.add("비밀번호");
+            }
+            if (StringUtils.isEmpty(userDto.getPw_check())) {
+                emptyFields.add("비밀번호 재확인");
+            }
+            if (userDto.getDevice_id() == null) {
+                emptyFields.add("디바이스 ID");
+            }
+
+            if (!emptyFields.isEmpty()) {
+                String errorMessage = "다음 필드를 입력하세요: " + String.join(", ", emptyFields);
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, errorMessage);
+            }
             // 입력하지 않은 정보가 있는지 확인
             if (userDto.getVehicle_model() == null || userDto.getName() == null || userDto.getApartment_name() == null || userDto.getEmail() == null || userDto.getAddress() == null || userDto.getPhone_number() == null || userDto.getVehicle_number() == null || userDto.getVehicle_color() == null || userDto.getPassword() == null || userDto.getPw_check() == null || userDto.getDevice_id() == null) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "입력하지 않은 정보가 있는지 확인하세요.");
@@ -81,7 +125,10 @@ public class MemberController {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "등록된 핸드폰번호입니다.");
             }
 
+            //회원가입 로직 수행
             Member member = memberService.register(userDto);
+
+            //회원가입 성공 시 응답 생성
             Message responseMessage = new Message();
             responseMessage.setStatus(StatusEnum.OK);
             responseMessage.setMessage("회원가입 성공");
@@ -91,7 +138,7 @@ public class MemberController {
         } catch (ResponseStatusException ex) {
             // 예외 처리
             Message responseMessage = new Message();
-            responseMessage.setStatus(StatusEnum.CONFLICT);
+            responseMessage.setStatus(StatusEnum.BAD_REQUEST);
             responseMessage.setMessage(ex.getReason());
             responseMessage.setData(null);
 

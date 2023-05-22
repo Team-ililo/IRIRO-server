@@ -18,4 +18,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(String email); //ID(=email)로 받고 member 반환
     void deleteMember(Long member_id);
     List<Member> findAll();
+    Optional<Member> findByAddress(String address);
+    Optional<Member> findByPhoneNumber(String phoneNumber);
 }

@@ -38,25 +38,6 @@ public class MemberServiceImpl implements MemberService {
     /**회원 가입**/
     @Override
     public Member register(UserDto userDto) throws Exception {
-        if (userDto.getVehicle_model()==null || userDto.getName()==null || userDto.getApartment_name()==null || userDto.getEmail()==null || userDto.getAddress()==null || userDto.getPhone_number()==null ||userDto.getVehicle_number()==null || userDto.getVehicle_color()==null || userDto.getPassword()==null || userDto.getPw_check()==null || userDto.getDevice_id()==null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "입력하지 않은 정보가 있는지 확인하세요.");
-        }
-        /**이미 존재하는 이메일로 회원가입 요청 시 -> 예외 발생**/
-        if(memberRepository.findByEmail(userDto.getEmail()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "회원 정보가 존재합니다.");
-        }
-        //비밀번호 같은지 확인
-        if(!Objects.equals(userDto.getPassword(), userDto.getPw_check())){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
-        }
-        /**이미 존재하는 차량으로 회원가입 요청 시 -> 예외 발생**/
-        if(vehicleRepository.findByVehicleNumber(userDto.getVehicle_number()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "등록된 차량입니다.");
-        }
-        /**이미 존재하는 디바이스으로 회원가입 요청 시 -> 예외 발생**/
-        if(deviceRepository.findById(userDto.getDevice_id()).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "등록된 디바이스입니다.");
-        }
 
         //아파트 정보 저장
         Apartment apartment = new Apartment();

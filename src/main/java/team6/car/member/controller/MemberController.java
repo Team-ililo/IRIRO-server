@@ -2,6 +2,7 @@ package team6.car.member.controller;
 
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.server.ResponseStatusException;
 import team6.car.apartment.repository.ApartmentRepository;
 import team6.car.device.repository.DeviceRepository;
 import team6.car.member.DTO.*;
@@ -22,6 +23,7 @@ import team6.car.vehicle.repository.VehicleRepository;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.nio.charset.Charset;
+import java.util.Objects;
 
 
 @RequiredArgsConstructor //의존성 주입
@@ -38,19 +40,71 @@ public class MemberController {
             @ApiResponse(code = 200,message = "OK(회원가입 성공)"),
             @ApiResponse(code = 400, message="BAD_REQUEST"),
             @ApiResponse(code = 404, message="NOT_FOUND"),
-            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR")
+            @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR"),
+            @ApiResponse(code = 409,message="CONFLICT")
     })
     @PostMapping("/members")//회원가입
-    public ResponseEntity<?> register(@RequestBody UserDto userDto) throws Exception {
-        Member member = memberService.register(userDto);
-        Message message = new Message();
-        HttpHeaders headers= new HttpHeaders();
-        headers.setContentType(new MediaType("application", "json", Charset.forName("UTF-8")));
+    public ResponseEntity<Message> register(@RequestBody UserDto userDto) throws Exception {
+        try {
+            // 입력하지 않은 정보가 있는지 확인
+            if (userDto.getVehicle_model() == null || userDto.getName() == null || userDto.getApartment_name() == null || userDto.getEmail() == null || userDto.getAddress() == null || userDto.getPhone_number() == null || userDto.getVehicle_number() == null || userDto.getVehicle_color() == null || userDto.getPassword() == null || userDto.getPw_check() == null || userDto.getDevice_id() == null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "입력하지 않은 정보가 있는지 확인하세요.");
+            }
 
-        message.setStatus(StatusEnum.OK);
-        message.setMessage("회원가입 성공");
-        message.setData(member);
-        return new ResponseEntity<>(message, headers, HttpStatus.OK);
+            // 이메일 중복 확인
+            if (memberRepository.findByEmail(userDto.getEmail()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "회원 정보가 존재합니다.");
+            }
+
+            // 비밀번호 일치 확인
+            if (!Objects.equals(userDto.getPassword(), userDto.getPw_check())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호가 일치하지 않습니다.");
+            }
+
+            // 차량 중복 확인
+            if (vehicleRepository.findByVehicleNumber(userDto.getVehicle_number()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "등록된 차량입니다.");
+            }
+
+            // 디바이스 중복 확인
+            if (deviceRepository.findById(userDto.getDevice_id()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "등록된 디바이스입니다.");
+            }
+
+            // 주소 중복 확인
+            if (memberRepository.findByAddress(userDto.getAddress()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "동일한 주소가 이미 등록되었습니다.");
+            }
+
+            // 핸드폰번호 중복 확인
+            if (memberRepository.findByPhoneNumber(userDto.getPhone_number()).isPresent()) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "등록된 핸드폰번호입니다.");
+            }
+
+            Member member = memberService.register(userDto);
+            Message responseMessage = new Message();
+            responseMessage.setStatus(StatusEnum.OK);
+            responseMessage.setMessage("회원가입 성공");
+            responseMessage.setData(member);
+
+            return ResponseEntity.ok(responseMessage);
+        } catch (ResponseStatusException ex) {
+            // 예외 처리
+            Message responseMessage = new Message();
+            responseMessage.setStatus(StatusEnum.CONFLICT);
+            responseMessage.setMessage(ex.getReason());
+            responseMessage.setData(null);
+
+            return ResponseEntity.status(ex.getStatus()).body(responseMessage);
+        } catch (Exception e) {
+            // 기타 예외 처리
+            Message responseMessage = new Message();
+            responseMessage.setStatus(StatusEnum.INTERNAL_SERVER_ERROR);
+            responseMessage.setMessage("회원가입 중 오류가 발생했습니다.");
+            responseMessage.setData(null);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseMessage);
+        }
     }
     @ApiOperation(value="로그인")
     @ApiResponses({

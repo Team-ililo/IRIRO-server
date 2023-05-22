@@ -10,10 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -75,6 +72,32 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .setParameter("email", email)
                 .getResultList();
         return result.stream().findAny();
+    }
+
+    @Override
+    public Optional<Member> findByAddress(String address) {
+        String jpql = "SELECT m FROM Member_info m WHERE m.address = :address";
+        TypedQuery<Member> query = em.createQuery(jpql, Member.class);
+        query.setParameter("address", address);
+        List<Member> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(resultList.get(0));
+        }
+    }
+
+    @Override
+    public Optional<Member> findByPhoneNumber(String phone_number) {
+        String jpql = "SELECT m FROM Member_info m WHERE m.phone_number = :phone_number";
+        TypedQuery<Member> query = em.createQuery(jpql, Member.class);
+        query.setParameter("phone_number", phone_number);
+        List<Member> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return Optional.empty();
+        } else {
+            return Optional.of(resultList.get(0));
+        }
     }
     public void deleteMember(Long member_id) {
         Member member = em.find(Member.class, member_id);

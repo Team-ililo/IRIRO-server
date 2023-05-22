@@ -19,7 +19,7 @@ repositories {
 }
 
 dependencies {
-	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.30'
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.33'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 

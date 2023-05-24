@@ -34,7 +34,7 @@ public class ApartmentController {
 
     @ApiOperation(value = "아파트 공지사항 조회", notes = "아파트 공지사항 리스트 조회")
     @ApiImplicitParam(
-            name = "apartment_name",
+            name = "apartmentName",
             value = "아파트 이름",
             required = true,
             dataType = "String",

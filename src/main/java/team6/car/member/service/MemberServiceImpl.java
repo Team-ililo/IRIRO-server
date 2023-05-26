@@ -20,6 +20,7 @@ import team6.car.device.repository.DeviceRepository;
 import team6.car.vehicle.repository.VehicleRepository;
 import team6.car.member.repository.MemberRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,6 +35,7 @@ public class MemberServiceImpl implements MemberService {
     private final DeviceRepository deviceRepository;
     private final VehicleRepository vehicleRepository;
     private final ComplaintRepository complaintRepository;
+
 
     /**회원 가입**/
     @Override
@@ -85,6 +87,18 @@ public class MemberServiceImpl implements MemberService {
         return memberProfileDto;
     }
 
+    @Override
+    @Transactional
+    public Member updateNumberOfComplaints(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new EntityNotFoundException("Member not found with id: " + memberId));
+
+        List<Complaint> complaints = member.getComplaints();
+        member.setNumber_of_complaints(complaints.size());
+
+        return memberRepository.update(member);
+    }
+
+
     /**신고하기**/
     @Override
     public Complaint report(ReportDto reportDto) throws Exception{
@@ -97,15 +111,15 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findById(memberId).orElseGet(() -> {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다.");
         });
-        //회원 신고 당한 횟수 + 1 해서 저장
-        member = memberRepository.updateComplaintNumber(member);
-        member = memberRepository.update(member);
 
         //complaint_info에 저장
         Complaint complaint = new Complaint();
         complaint.setComplaint_contents(reportDto.getComplaint_contents());
         complaint.setMember(member);
         complaintRepository.save(complaint);
+
+        //회원 신고 당한 횟수 수정해서 저장
+        member = updateNumberOfComplaints(memberId);
         return complaint;
     }
 
@@ -121,12 +135,13 @@ public class MemberServiceImpl implements MemberService {
         return complaintContentsList;
     }
 
+
     /** 신고 내용 조회 **/
     @Override
     public GetReportDto getReportInfo(Long id) throws Exception {
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "회원 정보가 존재하지 않습니다."));
-
+        member = updateNumberOfComplaints(id);
         Optional<List<Complaint>> complaintsOptional = complaintRepository.findComplaintsByMemberId(id);
         List<Complaint> complaints = complaintsOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "신고 당한 내역이 존재하지 않습니다."));
 
@@ -144,4 +159,5 @@ public class MemberServiceImpl implements MemberService {
 
         return getReportDto;
     }
+
 }

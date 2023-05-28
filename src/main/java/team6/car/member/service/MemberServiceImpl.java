@@ -41,10 +41,18 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member register(UserDto userDto) throws Exception {
 
-        //아파트 정보 저장
-        Apartment apartment = new Apartment();
-        apartment.setApartment_name(userDto.getApartment_name());
-        apartmentRepository.save(apartment);
+        // 아파트 정보 확인
+        Optional<Apartment> existingApartment = apartmentRepository.findByApartment_name(userDto.getApartment_name());
+        Apartment apartment;
+        if (existingApartment.isPresent()) {
+            apartment = existingApartment.get();
+        } else {
+            // 새로운 아파트 생성
+            apartment = Apartment.builder()
+                    .apartment_name(userDto.getApartment_name())
+                    .build();
+            apartmentRepository.save(apartment);
+        }
 
         //사용자 정보 저장
         Member member = new Member();

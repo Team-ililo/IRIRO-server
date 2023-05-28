@@ -95,8 +95,13 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
             nearVehicle.setNear_vehicle_number(vehicle.getVehicle_number());
             nearVehicle.setNear_vehicle_model(vehicle.getVehicle_model());
             nearVehicle.setNear_vehicle_color(vehicle.getVehicle_color());
-            nearVehicle.setNear_vehicle_departuretime(vehicle.getVehicle_departuretime());
-            nearVehicle.setNo_departure(vehicle.isNo_departure());
+            // 출차 시간과 장기 주차 여부가 null인 경우에 대한 처리
+            if (vehicle.getVehicle_departuretime() != null) {
+                nearVehicle.setNear_vehicle_departuretime(vehicle.getVehicle_departuretime());
+            }
+            if (vehicle.isNo_departure() != null) {
+                nearVehicle.setNo_departure(vehicle.isNo_departure());
+            }
             nearVehicles.add(nearVehicle);
         }
 

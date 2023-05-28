@@ -57,13 +57,23 @@ public class NearVehicleServiceImpl implements NearVehicleService {
                     LocalTime nearVehicleDepartureTime = nearVehicle.getNear_vehicle_departuretime();
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
                     String formattedExitTime = nearVehicleDepartureTime != null ? nearVehicleDepartureTime.format(formatter) : null;
+                    Boolean isLongTermParking = nearVehicle.getNo_departure() != null ? !nearVehicle.getNo_departure() : null;
 
                     Boolean isSatisfied;
-                    if (nearVehicle.getNo_departure()) {
+
+
+                    if(nearVehicle.getNo_departure()==null && nearVehicle.getNear_vehicle_departuretime()==null){
+                        isSatisfied=false;
+                    }
+                    else if (nearVehicle.getNo_departure()) {
                         isSatisfied = true;
                         formattedExitTime = null; // isLongTermParking이 true일 때 exitTime을 null로 설정
                     } else {
                         isSatisfied = myDepartureTime == null || nearVehicleDepartureTime == null || myDepartureTime.isBefore(nearVehicleDepartureTime);
+                    }
+
+                    if(isSatisfied==null){
+                        isSatisfied=false;
                     }
 
                     NearVehicleDto.NearVehicleDtoBuilder builder = NearVehicleDto.builder()
@@ -72,7 +82,7 @@ public class NearVehicleServiceImpl implements NearVehicleService {
                             .color(nearVehicle.getNear_vehicle_color())
                             .exitTime(formattedExitTime)
                             .isLongTermParking(nearVehicle.getNo_departure())
-                            .isSatisfied(isSatisfied != null ? isSatisfied : false); // null인 경우 false로 설정
+                            .isSatisfied(isSatisfied); // null인 경우 false로 설정
 
                     return builder.build();
                 })

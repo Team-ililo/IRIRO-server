@@ -38,11 +38,11 @@ public class Vehicle {
     @JoinColumn(name="device_id") //FK
     private Device device;
 
-    public void setNo_departure(boolean no_departure) {
+    public void setNo_departure(Boolean no_departure) {
         this.no_departure = no_departure;
     }
 
-    public boolean isNo_departure() {
+    public Boolean isNo_departure() {
             return no_departure;
     }
 

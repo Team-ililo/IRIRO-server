@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
-@Setter
-@Builder
+@Setter@Builder
 public class NearVehicleDto {
     @ApiModelProperty(example = "A123456")
     @ApiParam(value = "차량 번호")
@@ -28,5 +27,6 @@ public class NearVehicleDto {
     private Boolean isLongTermParking;
     @ApiModelProperty(example = "true")
     @ApiParam(value = "해당 차량 앞에 이중주차를 해도 되는가")
-    private boolean isSatisfied;
+    private Boolean isSatisfied;
 }
+

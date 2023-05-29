@@ -266,7 +266,7 @@ public class VehicleController {
         } catch (EntityNotFoundException e) {
             Message<List<NearVehicleDto>> response = new Message<>();
             response.setStatus(StatusEnum.NOT_FOUND);
-            response.setMessage("디바이스를 찾을 수 없습니다.");
+            response.setMessage("해당하는 차량이 없습니다.");
             response.setData(Collections.emptyList());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         } catch (RuntimeException e) {

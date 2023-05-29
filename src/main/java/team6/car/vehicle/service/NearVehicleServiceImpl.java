@@ -45,6 +45,11 @@ public class NearVehicleServiceImpl implements NearVehicleService {
         Device device = deviceRepository.findById(device_id)
                 .orElseThrow(() -> new EntityNotFoundException("Device not found"));
 
+        Optional<NearDevice> nearDeviceOptional = nearDeviceRepository.findByNearDeviceId(device_id);
+        if (!nearDeviceOptional.isPresent()) {
+            throw new EntityNotFoundException("Near Device not found");
+        }
+
         List<NearVehicle> nearVehicles = nearVehicleRepository.findByDeviceId(device_id)
                 .orElseThrow(() -> new EntityNotFoundException("Near Vehicles not found"));
 

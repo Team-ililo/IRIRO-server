@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface NearDeviceRepository extends JpaRepository<NearDevice, Long> {
     Optional<NearDevice> findByDeviceId(Long device_id);
+
+    Optional<NearDevice> findByNearDeviceId(Long device_id);
 }

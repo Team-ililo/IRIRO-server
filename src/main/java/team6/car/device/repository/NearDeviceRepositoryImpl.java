@@ -32,6 +32,12 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
         return typedQuery.getResultList();
     }
 
+    public Optional<NearDevice> findByNearDeviceId(Long device_id){
+        TypedQuery<NearDevice> query = em.createQuery("SELECT nd FROM NearDevice nd WHERE nd.device.device_id = :device_id", NearDevice.class);
+        query.setParameter("device_id", device_id);
+        return query.getResultStream().findFirst();
+    }
+
     @Override
     public Optional<NearDevice> findById(Long id) {
         return Optional.ofNullable(em.find(NearDevice.class, id));

@@ -12,9 +12,9 @@ public interface NearVehicleRepository extends JpaRepository<NearVehicle, Long> 
 
     NearVehicle save(NearVehicle near_vehicle); // 주변 차량 저장
     Optional<NearVehicle> findById(Long id);
-    List<NearVehicle> findByNearDeviceDeviceIdAndNoDepartureIsFalse(Long deviceId);
+    List<NearVehicle> findByNearDeviceDeviceIdAndNoDepartureIsFalse(String deviceId);
 
-    Optional<NearVehicle> findByNearDeviceId(Long id);
-    Optional<List<NearVehicle>> findByDeviceId(Long device_id);
+    Optional<NearVehicle> findByNearDeviceId(String id);
+    Optional<List<NearVehicle>> findByDeviceId(String device_id);
     List<NearVehicle> findAll();
 }

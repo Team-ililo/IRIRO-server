@@ -13,8 +13,7 @@ import javax.persistence.*;
 @Table(name="near_device_info")
 public class NearDevice {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long near_device_id;
+    private String near_device_id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="device_id") //FK
     private Device device;

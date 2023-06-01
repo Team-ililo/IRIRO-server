@@ -32,14 +32,14 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
         return typedQuery.getResultList();
     }
 
-    public Optional<NearDevice> findByNearDeviceId(Long device_id){
+    public Optional<NearDevice> findByNearDeviceId(String device_id){
         TypedQuery<NearDevice> query = em.createQuery("SELECT nd FROM NearDevice nd WHERE nd.device.device_id = :device_id", NearDevice.class);
         query.setParameter("device_id", device_id);
         return query.getResultStream().findFirst();
     }
 
     @Override
-    public Optional<NearDevice> findById(Long id) {
+    public Optional<NearDevice> findById(String id) {
         return Optional.ofNullable(em.find(NearDevice.class, id));
     }
 
@@ -49,7 +49,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public Optional<NearDevice> findByDeviceId(Long device_id) {
+    public Optional<NearDevice> findByDeviceId(String device_id) {
         String query = "SELECT nd FROM Near_Device_info nd WHERE nd.device_id = :device_id";
         TypedQuery<NearDevice> typedQuery = em.createQuery(query, NearDevice.class);
         typedQuery.setParameter("device_id", device_id);
@@ -87,7 +87,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public List<NearDevice> findAllById(Iterable<Long> longs) {
+    public List<NearDevice> findAllById(Iterable<String> Strings) {
         return null;
     }
 
@@ -125,7 +125,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public void deleteAllByIdInBatch(Iterable<Long> longs) {
+    public void deleteAllByIdInBatch(Iterable<String> Strings) {
 
     }
 
@@ -135,17 +135,17 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public NearDevice getOne(Long aLong) {
+    public NearDevice getOne(String aString) {
         return null;
     }
 
     @Override
-    public NearDevice getById(Long aLong) {
+    public NearDevice getById(String aString) {
         return null;
     }
 
     @Override
-    public NearDevice getReferenceById(Long aLong) {
+    public NearDevice getReferenceById(String aString) {
         return null;
     }
 
@@ -160,7 +160,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public boolean existsById(Long aLong) {
+    public boolean existsById(String aString) {
         return false;
     }
 
@@ -174,7 +174,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public void deleteById(Long aLong) {
+    public void deleteById(String aString) {
 
     }
 
@@ -184,7 +184,7 @@ public class NearDeviceRepositoryImpl implements NearDeviceRepository {
     }
 
     @Override
-    public void deleteAllById(Iterable<? extends Long> longs) {
+    public void deleteAllById(Iterable<? extends String> strings) {
 
     }
 

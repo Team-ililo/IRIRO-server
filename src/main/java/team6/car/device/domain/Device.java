@@ -13,5 +13,5 @@ import javax.persistence.*;
 @Table(name="device_info")
 public class Device {
     @Id
-    private Long device_id;
+    private String device_id;
 }

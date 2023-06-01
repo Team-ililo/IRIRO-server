@@ -49,7 +49,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public Optional<NearVehicle> findByNearDeviceId(Long id) {
+    public Optional<NearVehicle> findByNearDeviceId(String id) {
         TypedQuery<NearVehicle> query = em.createQuery(
                 "SELECT nv FROM NearVehicle nv WHERE nv.near_device.near_device_id = :near_device_id",
                 NearVehicle.class);
@@ -62,14 +62,14 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
     }
 
     @Override
-    public List<NearVehicle> findByNearDeviceDeviceIdAndNoDepartureIsFalse(Long device_id) {
+    public List<NearVehicle> findByNearDeviceDeviceIdAndNoDepartureIsFalse(String device_id) {
         String query = "SELECT nv FROM NearVehicle nv JOIN nv.near_device nd WHERE nd.device.device_id = :device_id AND nv.No_departure = false";
         TypedQuery<NearVehicle> typedQuery = em.createQuery(query, NearVehicle.class);
         typedQuery.setParameter("device_id", device_id);
         return typedQuery.getResultList();
     }
 
-    public Optional<List<NearVehicle>> findByDeviceId(Long device_id) {
+    public Optional<List<NearVehicle>> findByDeviceId(String device_id) {
         // Step 1: Find Near_Device by device_id
         String nearDeviceQuery = "SELECT nd FROM NearDevice nd WHERE nd.device.device_id = :device_id";
         TypedQuery<NearDevice> nearDeviceTypedQuery = em.createQuery(nearDeviceQuery, NearDevice.class);
@@ -82,7 +82,7 @@ public class NearVehicleRepositoryImpl implements NearVehicleRepository {
         // Step 2: Find Vehicles with matching near_device_id
         String vehicleQuery = "SELECT v FROM Vehicle v WHERE v.device.device_id IN :near_device_ids";
         TypedQuery<Vehicle> vehicleTypedQuery = em.createQuery(vehicleQuery, Vehicle.class);
-        List<Long> nearDeviceIds = nearDevices.stream()
+        List<String> nearDeviceIds = nearDevices.stream()
                 .map(NearDevice::getNear_device_id)
                 .collect(Collectors.toList());
         vehicleTypedQuery.setParameter("near_device_ids", nearDeviceIds);

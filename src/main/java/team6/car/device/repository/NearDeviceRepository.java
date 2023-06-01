@@ -7,8 +7,10 @@ import team6.car.device.domain.NearDevice;
 import java.util.Optional;
 
 @Repository
-public interface NearDeviceRepository extends JpaRepository<NearDevice, Long> {
-    Optional<NearDevice> findByDeviceId(Long device_id);
+public interface NearDeviceRepository extends JpaRepository<NearDevice, String> {
+    Optional<NearDevice> findById(String id);
 
-    Optional<NearDevice> findByNearDeviceId(Long device_id);
+    Optional<NearDevice> findByDeviceId(String device_id);
+
+    Optional<NearDevice> findByNearDeviceId(String device_id);
 }

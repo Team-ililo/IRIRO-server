@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import team6.car.device.domain.Device;
 
 @Repository
-public interface DeviceRepository extends JpaRepository<Device, Long> {
+public interface DeviceRepository extends JpaRepository<Device, String> {
 }

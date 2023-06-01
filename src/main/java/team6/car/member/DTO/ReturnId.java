@@ -19,7 +19,7 @@ public class ReturnId {
     private String apartment_name;
     @ApiModelProperty(example = "1")
     @ApiParam(value = "디바이스 아이디")
-    private Long device_id;
+    private String device_id;
     @ApiModelProperty(example = "1")
     @ApiParam(value = "차량 아이디")
     private Long vehicle_id;

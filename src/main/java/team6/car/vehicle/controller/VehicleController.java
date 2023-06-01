@@ -246,7 +246,7 @@ public class VehicleController {
             @ApiResponse(code = 500, message="INTERNAL_SERVER_ERROR(내부 서버 오류)")
     })
     @GetMapping("/nearvehicles/{id}")
-    public ResponseEntity<Message<List<NearVehicleDto>>> getNearVehicles(@PathVariable("id") Long deviceId) {
+    public ResponseEntity<Message<List<NearVehicleDto>>> getNearVehicles(@PathVariable("id") String deviceId) {
         try {
             List<NearVehicleDto> nearVehicles = nearVehicleService.getNearVehicle(deviceId);
 

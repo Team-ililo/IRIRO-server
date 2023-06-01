@@ -7,5 +7,5 @@ import team6.car.vehicle.response.Message;
 import java.util.List;
 
 public interface NearVehicleService {
-    List<NearVehicleDto> getNearVehicle(Long device_id);
+    List<NearVehicleDto> getNearVehicle(String device_id);
 }

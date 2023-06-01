@@ -44,7 +44,7 @@ public class VehicleRepositoryImpl implements VehicleRepository {
     }
 
     @Override
-    public Optional<Vehicle> findByDeviceId(Long deviceId) {
+    public Optional<Vehicle> findByDeviceId(String deviceId) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Vehicle> query = cb.createQuery(Vehicle.class);
         Root<Vehicle> root = query.from(Vehicle.class);

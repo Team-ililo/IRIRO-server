@@ -42,5 +42,5 @@ public class UserDto {
     private String pw_check;
     @ApiModelProperty(example = "111")
     @ApiParam(value = "디바이스 ID")
-    private Long device_id;
+    private String device_id;
 }

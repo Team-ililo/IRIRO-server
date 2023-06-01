@@ -17,7 +17,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     Vehicle save(Vehicle vehicle); // 본인 차량 저장
     Optional<Vehicle> findById(Long id);
     List<Vehicle> findAll();
-    Optional<Vehicle> findByDeviceId(Long deviceId);
+    Optional<Vehicle> findByDeviceId(String deviceId);
     Optional<Vehicle> findByVehicleNumber(String vehicle_number);
     Optional<Vehicle> findByMemberId(Long userId);
 }

@@ -1,6 +1,7 @@
 package team6.car.vehicle.service;
 
 import lombok.RequiredArgsConstructor;
+import net.bytebuddy.asm.Advice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -29,11 +30,13 @@ public class VehicleServiceImpl implements VehicleService {
     private static final Logger logger = LoggerFactory.getLogger(VehicleService.class);
     private final VehicleRepository vehicleRepository;
 
-    /** 출차 시간 등록 **/
+    /**
+     * 출차 시간 등록
+     **/
     @Override
-    public ResponseEntity<Message> enrollDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking){
-        Vehicle vehicle= vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
-        VehicleDto vehicleDto=VehicleDto.builder()
+    public ResponseEntity<Message> enrollDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking) {
+        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new RuntimeException("차량 정보를 찾을 수 없습니다."));
+        VehicleDto vehicleDto = VehicleDto.builder()
                 .exitTime(exitTime)
                 .no_departure(isLongTermParking)
                 .build();
@@ -51,13 +54,11 @@ public class VehicleServiceImpl implements VehicleService {
             message = "출차 시간 등록에 실패하였습니다. 장기 주차를 선택하셨습니다.";
             status = StatusEnum.BAD_REQUEST;
             throw new IllegalArgumentException(message);
-        }
-        else if (Boolean.FALSE.equals(isLongTermParking) && (exitTime==null)) {
+        } else if (Boolean.FALSE.equals(isLongTermParking) && (exitTime == null)) {
             message = "출차 시간 등록에 실패하였습니다. 출차 시간을 등록하세요";
             status = StatusEnum.BAD_REQUEST;
             throw new IllegalArgumentException(message);
-        }
-        else {
+        } else {
             message = "출차 시간 등록이 완료되었습니다.";
             status = StatusEnum.OK;
         }
@@ -71,10 +72,12 @@ public class VehicleServiceImpl implements VehicleService {
         return ResponseEntity.status(status.getStatusCode()).body(responseMessage);
     }
 
-    /** 출차 시간 수정 **/
+    /**
+     * 출차 시간 수정
+     **/
     @Override
-    public ResponseEntity<Message> modifyDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking){
-        Vehicle vehicle=vehicleRepository.findById(id).orElseThrow(()->new RuntimeException("차량 정보를 찾을 수 없습니다."));
+    public ResponseEntity<Message> modifyDeparturetime(Long id, LocalTime exitTime, Boolean isLongTermParking) {
+        Vehicle vehicle = vehicleRepository.findById(id).orElseThrow(() -> new RuntimeException("차량 정보를 찾을 수 없습니다."));
         vehicle.setVehicle_departuretime(exitTime);
         vehicle.setNo_departure(isLongTermParking);
         String message;
@@ -84,11 +87,10 @@ public class VehicleServiceImpl implements VehicleService {
             message = "출차 시간 수정에 실패하였습니다. 장기 주차를 선택하셨습니다.";
             status = StatusEnum.BAD_REQUEST;
             throw new IllegalArgumentException(message);
-        }
-        else if (Boolean.FALSE.equals(isLongTermParking) && (exitTime==null)) {
-                message = "출차 시간 등록에 실패하였습니다. 출차 시간을 등록하세요";
-                status = StatusEnum.BAD_REQUEST;
-                throw new IllegalArgumentException(message);
+        } else if (Boolean.FALSE.equals(isLongTermParking) && (exitTime == null)) {
+            message = "출차 시간 등록에 실패하였습니다. 출차 시간을 등록하세요";
+            status = StatusEnum.BAD_REQUEST;
+            throw new IllegalArgumentException(message);
         } else {
             message = "출차 시간 수정이 완료되었습니다.";
             status = StatusEnum.OK;
@@ -103,7 +105,9 @@ public class VehicleServiceImpl implements VehicleService {
         return ResponseEntity.status(status.getStatusCode()).body(responseMessage);
     }
 
-    /** 출차 시간 조회 **/
+    /**
+     * 출차 시간 조회
+     **/
     @Override
     public MainPageDto getDeparturetime(Long id) {
         Vehicle vehicle = vehicleRepository.findByIdWithMember(id)
@@ -115,6 +119,9 @@ public class VehicleServiceImpl implements VehicleService {
         String address = null;
         String formattedExitTime = null;
         long remainingMinutes = 0;
+        long remainingMinutes1 = 0;
+        long remainingMinutes2 = 0;
+        LocalTime remainingTime = null;
         Boolean isLongTermParking = null;
 
         if (member != null) {
@@ -131,24 +138,95 @@ public class VehicleServiceImpl implements VehicleService {
         if (exitTime != null && Boolean.FALSE.equals(vehicle.isNo_departure())) {
             formattedExitTime = exitTime.format(DateTimeFormatter.ofPattern("HH:mm"));
 
-            Duration duration = Duration.between(currentTime, exitTime);
-            remainingMinutes = duration.toMinutes();
 
-            if (remainingMinutes < 0) {
-                // remainingTime이 음수인 경우: 24시간을 더해주어 현재 날 기준으로 처리
-                duration = Duration.between(currentTime, exitTime);
-                remainingMinutes = duration.toMinutes() + 24 * 60; // remainingTime에 24시간(1440분)을 더해줍니다.
+            if (currentTime.isBefore(exitTime)) {
+                Duration duration = Duration.between(currentTime, exitTime);
+                remainingMinutes = duration.toMinutes();
+
+                if (remainingMinutes < 0) {
+                    remainingMinutes += 24 * 60;
+                }
+            } else if (currentTime.isAfter(exitTime)) {
+                Duration duration1 = Duration.between(currentTime, LocalTime.MIDNIGHT);
+                remainingMinutes1 = duration1.toMinutes();
+                if (remainingMinutes1 < 0) {
+                    remainingMinutes1 += 24 * 60;
+                }
+                Duration duration2 = Duration.between(LocalTime.MIDNIGHT, exitTime);
+                remainingMinutes2 = duration2.toMinutes();
+                if (remainingMinutes2 < 0) {
+                    remainingMinutes2 += 24 * 60;
+                }
+                remainingMinutes = remainingMinutes1 + remainingMinutes2;
+            } else if(currentTime.equals(exitTime)){
+                remainingMinutes=0;
+            }
+/*
+            // 현재 시간 12:00:01~23:59:59
+            if ((currentTime.isAfter(LocalTime.NOON) && currentTime.isBefore(LocalTime.of(23,59,59)))|| currentTime.equals(LocalTime.of(23,59,59))){
+
+                Duration duration1=Duration.between(currentTime,LocalTime.MIDNIGHT);
+                remainingMinutes1=duration1.toMinutes();
+                if(remainingMinutes1<0){
+                    remainingMinutes1+=24*60;
+                }
+
+                Duration duration2=Duration.between(LocalTime.MIDNIGHT,exitTime);
+                remainingMinutes2=duration2.toMinutes();
+                if(remainingMinutes2<0){
+                    remainingMinutes2+=24*60;
+                }
+
+                remainingMinutes=remainingMinutes1+remainingMinutes2;
+            }
+
+            // 현재 시간 00:00:01 ~ 11:59:59
+            else if(currentTime.isAfter(LocalTime.MIDNIGHT) && currentTime.isBefore(LocalTime.NOON)){
+
+                Duration duration=Duration.between(currentTime,exitTime);
+                remainingMinutes=duration.toMinutes();
+                if(remainingMinutes<0){
+                    remainingMinutes+=24*60;
+                }
+
+            }
+
+            // 현재 시각 = 12:00:00
+            else if(currentTime.equals(LocalTime.NOON)){
+                Duration duration1=Duration.between(LocalTime.MIDNIGHT,exitTime);
+                remainingMinutes1=duration1.toMinutes();
+                if(remainingMinutes1<0){
+                    remainingMinutes1+=24*60;
+                }
+
+                Duration duration2=Duration.between(LocalTime.NOON,LocalTime.MIDNIGHT);
+                remainingMinutes2=duration2.toMinutes();
+                if(remainingMinutes2<0){
+                    remainingMinutes2+=24*60;
+                }
+
+                remainingMinutes=remainingMinutes1+remainingMinutes2;
+            }
+
+            // 현재 시작 = 24:00:00
+            else if(currentTime.equals(LocalTime.MIDNIGHT)){
+                Duration duration=Duration.between(LocalTime.MIDNIGHT,exitTime);
+                remainingMinutes=duration.toMinutes();
+            }
+            if(remainingMinutes<0){
+                remainingMinutes+=24*60;
             }
         }
-
-        return MainPageDto.builder()
-                .exitTime(formattedExitTime)
-                .remainingTime(formatRemainingTime(remainingMinutes))
-                .isLongTermParking(vehicle.getNo_departure())
-                .apartmentName(apartmentName)
-                .address(address)
-                .build();
-    }
+*/
+        }
+            return MainPageDto.builder()
+                    .exitTime(formattedExitTime)
+                    .remainingTime(formatRemainingTime(remainingMinutes))
+                    .isLongTermParking(vehicle.getNo_departure())
+                    .apartmentName(apartmentName)
+                    .address(address)
+                    .build();
+        }
 
     private String formatRemainingTime(long minutes) {
         long hours = minutes / 60;

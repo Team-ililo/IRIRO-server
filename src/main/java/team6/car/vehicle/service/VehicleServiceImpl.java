@@ -161,63 +161,7 @@ public class VehicleServiceImpl implements VehicleService {
             } else if(currentTime.equals(exitTime)){
                 remainingMinutes=0;
             }
-/*
-            // 현재 시간 12:00:01~23:59:59
-            if ((currentTime.isAfter(LocalTime.NOON) && currentTime.isBefore(LocalTime.of(23,59,59)))|| currentTime.equals(LocalTime.of(23,59,59))){
 
-                Duration duration1=Duration.between(currentTime,LocalTime.MIDNIGHT);
-                remainingMinutes1=duration1.toMinutes();
-                if(remainingMinutes1<0){
-                    remainingMinutes1+=24*60;
-                }
-
-                Duration duration2=Duration.between(LocalTime.MIDNIGHT,exitTime);
-                remainingMinutes2=duration2.toMinutes();
-                if(remainingMinutes2<0){
-                    remainingMinutes2+=24*60;
-                }
-
-                remainingMinutes=remainingMinutes1+remainingMinutes2;
-            }
-
-            // 현재 시간 00:00:01 ~ 11:59:59
-            else if(currentTime.isAfter(LocalTime.MIDNIGHT) && currentTime.isBefore(LocalTime.NOON)){
-
-                Duration duration=Duration.between(currentTime,exitTime);
-                remainingMinutes=duration.toMinutes();
-                if(remainingMinutes<0){
-                    remainingMinutes+=24*60;
-                }
-
-            }
-
-            // 현재 시각 = 12:00:00
-            else if(currentTime.equals(LocalTime.NOON)){
-                Duration duration1=Duration.between(LocalTime.MIDNIGHT,exitTime);
-                remainingMinutes1=duration1.toMinutes();
-                if(remainingMinutes1<0){
-                    remainingMinutes1+=24*60;
-                }
-
-                Duration duration2=Duration.between(LocalTime.NOON,LocalTime.MIDNIGHT);
-                remainingMinutes2=duration2.toMinutes();
-                if(remainingMinutes2<0){
-                    remainingMinutes2+=24*60;
-                }
-
-                remainingMinutes=remainingMinutes1+remainingMinutes2;
-            }
-
-            // 현재 시작 = 24:00:00
-            else if(currentTime.equals(LocalTime.MIDNIGHT)){
-                Duration duration=Duration.between(LocalTime.MIDNIGHT,exitTime);
-                remainingMinutes=duration.toMinutes();
-            }
-            if(remainingMinutes<0){
-                remainingMinutes+=24*60;
-            }
-        }
-*/
         }
             return MainPageDto.builder()
                     .exitTime(formattedExitTime)

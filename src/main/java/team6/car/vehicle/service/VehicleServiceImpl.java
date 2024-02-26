@@ -128,7 +128,7 @@ public class VehicleServiceImpl implements VehicleService {
             apartment = member.getApartment();
             address = member.getAddress();
             if (apartment != null) {
-                apartmentName = apartment.getApartment_name();
+                apartmentName = apartment.getApartmentName();
             }
         }
 

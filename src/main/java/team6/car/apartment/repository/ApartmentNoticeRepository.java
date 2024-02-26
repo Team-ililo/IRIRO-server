@@ -9,9 +9,8 @@ import java.util.Optional;
 
 public interface ApartmentNoticeRepository extends JpaRepository<ApartmentNotice, Long> {
 
-    ApartmentNotice save(ApartmentNotice apartmentNotice);
     Optional<ApartmentNotice> findById(Long id);
-    List<ApartmentNotice> findByApartmentId(Long apartmentId);
+    List<ApartmentNotice> findByApartment_ApartmentId(Long apartmentId);
     //Optional<ApartmentNotice> findByApartmentId(Long apartmentId);
-    List<ApartmentNotice> findByApartment_name(String apartment_name);
+    List<ApartmentNotice> findByApartment_ApartmentName(String apartmentName);
 }

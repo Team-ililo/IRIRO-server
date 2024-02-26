@@ -9,11 +9,8 @@ import java.util.Optional;
 
 @Repository
 public interface NearVehicleRepository extends JpaRepository<NearVehicle, Long> {
-
-    NearVehicle save(NearVehicle near_vehicle); // 주변 차량 저장
     Optional<NearVehicle> findById(Long id);
-    List<NearVehicle> findByNearDeviceDeviceIdAndNoDepartureIsFalse(String deviceId);
-
+    List<NearVehicle> findByNearDeviceIdAndNoDepartureIsFalse(String deviceId);
     Optional<NearVehicle> findByNearDeviceId(String id);
     Optional<List<NearVehicle>> findByDeviceId(String device_id);
     List<NearVehicle> findAll();

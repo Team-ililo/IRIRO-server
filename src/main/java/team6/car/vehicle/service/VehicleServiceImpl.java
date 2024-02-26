@@ -109,8 +109,8 @@ public class VehicleServiceImpl implements VehicleService {
      * 출차 시간 조회
      **/
     @Override
-    public MainPageDto getDeparturetime(Long id) {
-        Vehicle vehicle = vehicleRepository.findByIdWithMember(id)
+    public MainPageDto getDeparturetime(Long memberId) {
+        Vehicle vehicle = vehicleRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new RuntimeException("차량 정보를 찾을 수 없습니다."));
         Member member = vehicle.getMember();
 

@@ -11,9 +11,6 @@ import java.util.Optional;
 @Repository
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-
-    @EntityGraph(attributePaths = "member")
-    Optional<Vehicle> findByIdWithMember(Long id);
     Vehicle save(Vehicle vehicle); // 본인 차량 저장
     Optional<Vehicle> findById(Long id);
     List<Vehicle> findAll();

@@ -17,31 +17,23 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ApartmentNoticeServiceImpl implements ApartmentNoticeService{
 
-    @Autowired
     private final ApartmentNoticeRepository apartmentNoticeRepository;
-
+/*
     @Override
-    public List<ApartmentNoticeDto> getApartmentNotice(Long id) {
+    public Optional<List<ApartmentNoticeDto>> getApartmentNotice(Long id) {
         List<ApartmentNotice> apartmentNotices = apartmentNoticeRepository.findByApartment_ApartmentId(id);
         if (apartmentNotices.isEmpty()) {
             throw new RuntimeException("아파트 정보를 찾을 수 없습니다.");
         }
-        return apartmentNotices.stream()
+        List <ApartmentNoticeDto> noticeDtos = apartmentNotices.stream()
                 .map(apartmentNotice -> ApartmentNoticeDto.builder()
                         .apartment_notice_date(apartmentNotice.getApartmentNoticeDate())
                         .notice(apartmentNotice.getApartmentNotice())
                         .build())
                 .collect(Collectors.toList());
+        return Optional.of(noticeDtos);
     }
-
-    @Override
-    public List<ApartmentNotice> findByApartmentId(Long apartment_id) {
-        List<ApartmentNotice> apartmentNotices = apartmentNoticeRepository.findByApartment_ApartmentId(apartment_id);
-        if (apartmentNotices.isEmpty()) {
-            throw new RuntimeException("아파트 공지사항을 찾을 수 없습니다.");
-        }
-        return apartmentNotices;
-    }
+*/
 
     @Override
     public Optional<List<ApartmentNoticeDto>> getApartmentNotice(String apartmentName) {
@@ -58,12 +50,5 @@ public class ApartmentNoticeServiceImpl implements ApartmentNoticeService{
         return Optional.of(noticeDtos);
     }
 
-    @Override
-    public Optional<List<ApartmentNotice>> findByApartmentName(String apartmentName) {
-        List<ApartmentNotice> apartmentNotices = apartmentNoticeRepository.findByApartment_ApartmentName(apartmentName);
-        if (apartmentNotices.isEmpty()) {
-            return Optional.empty();
-        }
-        return Optional.of(apartmentNotices);
-    }
+
 }

@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 @RestController
 public class ApartmentController {
 
-    @Autowired
     private final ApartmentNoticeService apartmentNoticeService;
 
     @ApiOperation(value = "아파트 공지사항 조회", notes = "아파트 공지사항 리스트 조회")
@@ -52,32 +51,26 @@ public class ApartmentController {
         StatusEnum status;
         String message;
 
-        try {
-            Optional<List<ApartmentNoticeDto>> apartmentNoticesOptional = apartmentNoticeService.getApartmentNotice(apartmentName);
-            if (apartmentNoticesOptional.isPresent()) {
-                apartmentNoticeDtos = apartmentNoticesOptional.get();
+        Optional<List<ApartmentNoticeDto>> apartmentNoticesOptional = apartmentNoticeService.getApartmentNotice(apartmentName);
+        if (apartmentNoticesOptional.isPresent()) {
+            apartmentNoticeDtos = apartmentNoticesOptional.get();
 
-                // null 값을 체크하여 실패로 처리
-                boolean hasNullValues = apartmentNoticeDtos.stream()
-                        .anyMatch(notice -> notice.getApartment_notice_date() == null || notice.getNotice() == null);
+            // null 값을 체크하여 실패로 처리
+            boolean hasNullValues = apartmentNoticeDtos.stream()
+                    .anyMatch(notice -> notice.getApartment_notice_date() == null || notice.getNotice() == null);
 
-                if (hasNullValues) {
-                    apartmentNoticeDtos = null;
-                    status = StatusEnum.NOT_FOUND;
-                    message = "공지사항 정보가 유효하지 않습니다.";
-                } else {
-                    status = StatusEnum.OK;
-                    message = "아파트 공지사항 조회가 완료되었습니다.";
-                }
-            } else {
+            if (hasNullValues) {
                 apartmentNoticeDtos = null;
                 status = StatusEnum.NOT_FOUND;
-                message = "해당 아파트에 대한 공지사항이 없습니다.";
+                message = "공지사항 정보가 유효하지 않습니다.";
+            } else {
+                status = StatusEnum.OK;
+                message = "아파트 공지사항 조회가 완료되었습니다.";
             }
-        } catch (RuntimeException e) {
+        } else {
             apartmentNoticeDtos = null;
-            status = StatusEnum.INTERNAL_SERVER_ERROR;
-            message = "아파트 공지사항 조회에 실패하였습니다.";
+            status = StatusEnum.NOT_FOUND;
+            message = "해당 아파트에 대한 공지사항이 없습니다.";
         }
 
         Message<List<ApartmentNoticeDto>> responseMessage = new Message<>();

@@ -17,9 +17,9 @@ import java.util.List;
 public class Apartment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long apartment_id;
+    private Long apartmentId;
     @Column(name="apartment_name")
-    private String apartment_name;
+    private String apartmentName;
     @OneToMany(mappedBy = "apartment")
-    private List<Member> Member_info;
+    private List<Member> MemberInfo;
 }

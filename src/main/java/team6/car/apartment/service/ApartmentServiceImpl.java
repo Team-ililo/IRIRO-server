@@ -18,15 +18,15 @@ public class ApartmentServiceImpl implements ApartmentService {
     private final ApartmentRepository apartmentRepository;
 
     @Override
-    public Long getApartmentIdByName(String apartment_name) {
-        Optional<Apartment> existingApartment = apartmentRepository.findByApartment_name(apartment_name);
+    public Long getApartmentIdByName(String apartmentName) {
+        Optional<Apartment> existingApartment = apartmentRepository.findByApartmentName(apartmentName);
         if (existingApartment.isPresent()) {
-            return existingApartment.get().getApartment_id();
+            return existingApartment.get().getApartmentId();
         } else {
             Apartment newApartment = new Apartment();
-            newApartment.setApartment_name(apartment_name);
+            newApartment.setApartmentName(apartmentName);
             apartmentRepository.save(newApartment);
-            return newApartment.getApartment_id();
+            return newApartment.getApartmentId();
         }
     }
 }
